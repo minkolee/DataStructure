@@ -1,14 +1,12 @@
 package alog4e.chapter01.section02.stack;
 
-import alog4e.libs.StdOut;
-
 import java.util.Iterator;
 
-public class FixedCapaticyStackOfStrings<T> implements Iterable<T> {
+public class ResizingArrayStack<T> implements Iterable<T> {
     private T[] stack;
     private int N;
 
-    public FixedCapaticyStackOfStrings(int cap) {
+    public ResizingArrayStack(int cap) {
         stack = (T[]) (new Object[cap]);
     }
 
@@ -21,19 +19,29 @@ public class FixedCapaticyStackOfStrings<T> implements Iterable<T> {
     }
 
     public void push(T item) {
-        if (this.isFull()) {
-            throw new RuntimeException("Stack overflow");
+        if (N == stack.length) {
+            resize(stack.length * 2);
         }
         stack[N++] = item;
     }
 
     public T pop() {
-        return stack[--N];
+        T item = stack[--N];
+
+        //这里注意, 设置成null, 释放内存
+        stack[N] = null;
+        if (N>0 && N == stack.length / 4) {
+            resize(stack.length / 2);
+        }
+        return item;
     }
 
-    //添加了isFull方法之后, push函数就可以判断是不是队列已满, 满了就抛运行时错误
-    public boolean isFull() {
-        return N == stack.length;
+    public void resize(int max) {
+        T[] temp = (T[]) (new Object[max]);
+        for (int i = 0; i < temp.length; i++) {
+            temp[i] = stack[i];
+        }
+        stack = temp;
     }
 
     @Override
@@ -56,16 +64,10 @@ public class FixedCapaticyStackOfStrings<T> implements Iterable<T> {
         }
     }
 
+
+
     public static void main(String[] args) {
-        FixedCapaticyStackOfStrings<String> stack = new FixedCapaticyStackOfStrings<>(5);
-        stack.push("cony");
-        stack.push("guggu");
-        stack.push("owl");
-        stack.push("choco");
-        StdOut.println(stack.isFull());
-        stack.push("late");
-        StdOut.println(stack.isFull());
-        stack.push("kiwi");
+
     }
 
 }
