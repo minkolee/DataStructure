@@ -16,6 +16,7 @@ public class EX010304 {
         Stack<Character> stack = new Stack<>();
         StdOut.print("Please input some parentheses: ");
         String input = StdIn.readLine();
+
         int length = input.length();
         for (int i = 0; i < length; i++) {
             char temp = input.charAt(i), temp2;
@@ -29,18 +30,24 @@ public class EX010304 {
                     temp2 = stack.pop();
                     if (temp2 != '{') {
                         good = false;
+                        StdOut.println(good);
+                        return;
                     }
                     break;
                 case ']':
                     temp2 = stack.pop();
                     if (temp2 != '[') {
                         good = false;
+                        StdOut.println(good);
+                        return;
                     }
                     break;
                 case ')':
                     temp2 = stack.pop();
                     if (temp2 != '(') {
                         good = false;
+                        StdOut.println(good);
+                        return;
                     }
                     break;
                 default:
@@ -50,7 +57,9 @@ public class EX010304 {
         }
         if (!stack.isEmpty()) {
             good = false;
+            StdOut.printf("Size of stack is %d\n", stack.size());
         }
         StdOut.println(good);
     }
+
 }
