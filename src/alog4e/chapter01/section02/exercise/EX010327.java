@@ -24,21 +24,21 @@ public class EX010327 {
         return max;
     }
 
+    //这是28题递归的实现
+
     public static int maxRecursion(Node<Integer> node) {
         if (node.next == null) {
             return node.item;
         }
-        return maxRecursion(node.next);
+        return Math.max(node.item, maxRecursion(node.next));
     }
 
-    public static int getMax(int a, int b) {
-    }
 
 
     public static void main(String[] args) {
-        Node<Integer> nodes = Node.getIntLinkedList();
+        Node<Integer> nodes = Node.getIntLinkedList(5);
         Node.walk(nodes);
-        StdOut.printf("Max number is %d\n", max(nodes));
+        StdOut.printf("Max number is %d\n", maxRecursion(nodes));
     }
 }
 

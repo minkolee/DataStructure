@@ -41,12 +41,19 @@ public class Node<T> {
         }
     }
 
-    public static Node<Integer> getIntLinkedList() {
-        Node<Integer>[] nodes = new Node[10];
+    public static void walk(DoubleNode node) {
+        while (node != null) {
+            StdOut.println(node);
+            node = node.next;
+        }
+    }
+
+    public static Node<Integer> getIntLinkedList(int N) {
+        Node<Integer>[] nodes = new Node[N];
 
         Random random = new Random();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < N; i++) {
             Node<Integer> newNode = new Node<>();
             newNode.item = i + random.nextInt(100);
 
@@ -54,9 +61,7 @@ public class Node<T> {
         }
 
 
-
-
-        for (int j = 0; j < 9; j++) {
+        for (int j = 0; j < N-1; j++) {
             nodes[j].next = nodes[j + 1];
         }
         return nodes[0];

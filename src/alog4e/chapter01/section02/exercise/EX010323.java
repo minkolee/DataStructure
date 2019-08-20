@@ -1,7 +1,6 @@
 package alog4e.chapter01.section02.exercise;
 
 import alog4e.libs.StdOut;
-import com.sun.org.apache.xpath.internal.objects.XNodeSet;
 
 /**
  * x.next = t

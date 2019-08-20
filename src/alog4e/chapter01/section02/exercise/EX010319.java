@@ -66,8 +66,6 @@ public class EX010319 {
             StdOut.println(pointer);
             pointer = pointer.next;
         }
-
-
     }
 
 }
