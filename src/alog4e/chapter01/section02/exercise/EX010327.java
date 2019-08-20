@@ -24,6 +24,17 @@ public class EX010327 {
         return max;
     }
 
+    public static int maxRecursion(Node<Integer> node) {
+        if (node.next == null) {
+            return node.item;
+        }
+        return maxRecursion(node.next);
+    }
+
+    public static int getMax(int a, int b) {
+    }
+
+
     public static void main(String[] args) {
         Node<Integer> nodes = Node.getIntLinkedList();
         Node.walk(nodes);
