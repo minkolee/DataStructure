@@ -1,4 +1,5 @@
 package alog4e.chapter02.sort01;
+
 /******************************************************************************
  *  Compilation:  javac SortCompare.java
  *  Execution:    java SortCompare alg1 alg2 n trials
