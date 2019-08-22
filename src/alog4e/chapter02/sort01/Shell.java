@@ -18,16 +18,15 @@ public class Shell {
 
         //这个循环就是不断缩小组数也就是h的数, 最后h=1的时候就是对整个数组排序, 之后控制h /= 3, 就会结束循环
         while (h >= 1) {
-            //这个和原来一样, 也是遍历
-            for (int i = 0; i < N; i++) {
-                //
-                for (int j = i; j >= h && less(a[i], a[j - h]); j -= h) {
+            //从分组的地方开始, 而不是从头开始
+            for (int i = h; i < N; i++) {
+                //以h为间隔, 从索引h开始到最后一个元素, 不断的反向判断和交换间隔为h的元素
+                for (int j = i; j >= h && less(a[j], a[j - h]); j -= h) {
                     exch(a, j, j - h);
                 }
             }
+            h = h / 3;
         }
-
-
     }
 
     //比较两个元素大小
@@ -61,7 +60,7 @@ public class Shell {
     }
 
     public static void main(String[] args) {
-        int N = 270;
+        int N = 1000;
         Double[] a = new Double[N];
         Random random = new Random();
         //进行T次, 数组长度为N的排序, 将每次排序的时间累加到total上
@@ -73,7 +72,15 @@ public class Shell {
         long start = System.currentTimeMillis();
         Shell.sort(a);
         long end = System.currentTimeMillis();
-        StdOut.println("Selection time is " + (end - start));
+        StdOut.println("Shell time is " + (end - start));
+        show(a);
 
+        StdOut.println(isSorted(a));
+
+//        String[] a = new String[]{"S", "H", "E", "L", "L", "S", "O", "R", "T", "E", "X", "A", "M", "P", "L", "E"};
+//        show(a);
+//        StdOut.println("----------------");
+//        Shell.sort(a);
+//        StdOut.println(isSorted(a));
     }
 }
