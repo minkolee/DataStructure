@@ -83,7 +83,7 @@ public class SortCompare {
         String alg4 = "Merge";
         String alg5 = "MergeBU";
         String alg6 = "Quick";
-        int n = 1000;
+        int n = 10000;
         int trials = 200;
         double time1, time2, time3, time4, time5,time6;
         time1 = timeRandomInput(alg1, n, trials);   // Total for alg1.
