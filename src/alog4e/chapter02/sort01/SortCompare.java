@@ -41,7 +41,7 @@ public class SortCompare {
 //        else if (alg.equals("MergeX"))          MergeX.sort(a);
         else if (alg.equals("MergeBU"))         MergeBU.sort(a);
         else if (alg.equals("Quick"))           Quick.sort(a);
-//        else if (alg.equals("Quick3way"))       Quick3way.sort(a);
+        else if (alg.equals("Quick3way"))       Quick3way.sort(a);
 //        else if (alg.equals("QuickX"))          QuickX.sort(a);
 //        else if (alg.equals("Heap"))            Heap.sort(a);
         else if (alg.equals("System"))          Arrays.sort(a); 
@@ -83,18 +83,22 @@ public class SortCompare {
         String alg4 = "Merge";
         String alg5 = "MergeBU";
         String alg6 = "Quick";
-        int n = 10000;
-        int trials = 200;
-        double time1, time2, time3, time4, time5,time6;
+        String alg7 = "Quick3way";
+
+        int n = 1000;
+        int trials = 1000;
+        double time1, time2, time3, time4, time5, time6, time7;
         time1 = timeRandomInput(alg1, n, trials);   // Total for alg1.
         time2 = timeRandomInput(alg2, n, trials);   // Total for alg2.
         time3 = timeRandomInput(alg3, n, trials);   // Total for alg2.
         time4 = timeRandomInput(alg4, n, trials);   // Total for alg2.
         time5 = timeRandomInput(alg5, n, trials);   // Total for alg2.
         time6 = timeRandomInput(alg6, n, trials);   // Total for alg2.
+        time7 = timeRandomInput(alg7, n, trials);   // Total for alg2.
         StdOut.printf("For %d times of length=%d array, result is:\n", trials, n);
         StdOut.printf("Insertion: %f, Selection: %f, Shell: %f\n", time1, time2, time3);
         StdOut.printf("Merge: %f, MergeBU: %f, Quick: %f\n", time4, time5, time6);
+        StdOut.printf("Quick3way: %f\n", time7);
 
     }
 } 
