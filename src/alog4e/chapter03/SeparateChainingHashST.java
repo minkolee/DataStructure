@@ -1,11 +1,11 @@
 package alog4e.chapter03;
 
-    public class SeparateChainingHashST<Key, Value> {
-        private static final int INIT_CAPACITY = 4;
+public class SeparateChainingHashST<Key, Value> {
+    private static final int INIT_CAPACITY = 4;
 
-        private int n;
-        private int m;
-        private SequentialSearchST<Key, Value>[] st;
+    private int n;
+    private int m;
+    private SequentialSearchST<Key, Value>[] st;
 
 
     /**
