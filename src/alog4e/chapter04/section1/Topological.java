@@ -26,6 +26,8 @@ package alog4e.chapter04.section1; /********************************************
  *
  ******************************************************************************/
 
+import alog4e.libs.StdOut;
+
 /**
  *  The {@code Topological} class represents a data type for 
  *  determining a topological order of a directed acyclic graph (DAG).

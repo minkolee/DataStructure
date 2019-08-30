@@ -11,6 +11,7 @@ package alog4e.chapter04.section1; /********************************************
  ******************************************************************************/
 
 import alog4e.chapter01.section02.bag.Bag;
+import alog4e.chapter01.section02.stack.Stack;
 import alog4e.libs.In;
 import alog4e.libs.StdOut;
 import alog4e.libs.StdRandom;
