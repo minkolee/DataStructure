@@ -1,39 +1,9 @@
 package datastructure.chapter1;
 
+
+import java.util.Arrays;
+
 public class OnlineShopper {
-
-
-    private static class Item {
-        private int price;
-        private String name;
-
-        public int getPrice() {
-            return price;
-        }
-
-        public void setPrice(int price) {
-            this.price = price;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Item() {
-
-        }
-
-        public Item(String name, int price) {
-
-            this.price = price;
-            this.name = name;
-        }
-    }
-
 
     public static void main(String[] args) {
 
@@ -44,18 +14,73 @@ public class OnlineShopper {
                 new Item("Sunflower Seeds", 1295),
         };
 
-        BagInterface<Item> shoppingCart = new Bag<>();
+        ArrayBag<Item> shoppingCart = new ArrayBag<>();
 
-        int totalCost = 0;
-
+        //添加了四个项目
         for (Item nextItem : items) {
             shoppingCart.add(nextItem);
-            totalCost += nextItem.getPrice();
         }
 
-        while (!shoppingCart.isEmpty()) {
-            System.out.println(shoppingCart.remove());
-        }
-        System.out.println("Total cost: " + "\t$" + totalCost / 100 + "." + totalCost % 100);
+        System.out.println("添加了四个项目");
+        //测试所有方法
+        System.out.println(shoppingCart.getCurrnetSize());
+
+        System.out.println("是否为空");
+        System.out.println(shoppingCart.isEmpty());
+        System.out.println("现在的包内容");
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+        System.out.println("添加一个相同的项目");
+        shoppingCart.add(items[3]);
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+
+        System.out.println("第0项出现的次数");
+        System.out.println(shoppingCart.getFrequencyOf(items[0]));
+        System.out.println("第3项出现的次数");
+        System.out.println(shoppingCart.getFrequencyOf(items[3]));
+        System.out.println("不存在的项目出现的次数");
+        System.out.println(shoppingCart.getFrequencyOf(new Item("fsddjk", 1209)));
+
+        System.out.println("是否包含items[3]");
+        System.out.println(shoppingCart.contains(items[3]));
+
+        System.out.println("是否包含一个与items[1]相等的新建对象:");
+        System.out.println(shoppingCart.contains(new Item("Squirrel guard", 1547)));
+
+        System.out.println("现在的包内容");
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+
+        System.out.println("删除与items[1]相等的新建对象");
+        shoppingCart.remove(new Item("Squirrel guard", 1547));
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+
+        System.out.println("删除items[3]");
+        shoppingCart.remove(items[3]);
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+
+        System.out.println("删除items[3]");
+        shoppingCart.remove(items[3]);
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+
+        System.out.println("删除items[0]");
+        shoppingCart.remove(items[0]);
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+
+        System.out.println("再添加items[3]");
+        shoppingCart.add(items[3]);
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+
+        System.out.println("删除干净");
+        System.out.println(shoppingCart.remove());
+        System.out.println(shoppingCart.isEmpty());
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+
+        System.out.println(shoppingCart.remove());
+        System.out.println(shoppingCart.isEmpty());
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+
+        System.out.println(shoppingCart.remove());
+        System.out.println(shoppingCart.isEmpty());
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
+
     }
 }
