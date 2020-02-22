@@ -4,7 +4,7 @@ package datastructure.chapter1;
 import java.util.Arrays;
 import java.util.Random;
 
-public class ResizableArrayBag<T> implements BagInterface<T> {
+public class ResizableArrayBag<T extends Comparable<T>> implements BagInterface<T> {
 
     private T[] bag;
 
@@ -155,7 +155,7 @@ public class ResizableArrayBag<T> implements BagInterface<T> {
     }
 
     public T replace(T newEntry, T targetEntry) {
-        if (newEntry == null || targetEntry ==null) {
+        if (newEntry == null || targetEntry == null) {
             throw new RuntimeException("两个参数都不能为null");
         }
         T result = null;
@@ -175,4 +175,35 @@ public class ResizableArrayBag<T> implements BagInterface<T> {
         return null;
     }
 
+    /**
+     * 从包中删除与参数相等的每一个对象, 实现逻辑是
+     * 先找到该参数的位置, 然后进行删除, 之后检查被替换的是否与entry相同, 如果不同, 继续下一个位置, 如果相同, 继续删除.
+     *
+     * @param entry 要删除的对象
+     */
+    public T removeEvery(T entry) {
+
+        T result = null;
+
+        if (!isEmpty()) {
+            for (int i = 0; i < numberOfEntries; i++) {
+                //只要能找到, 第一次删除必定成功
+                if (bag[i].equals(entry)) {
+                    result = removeEntry(i);
+                    //有可能删除之后是null, 所以先把判断是不是null放在前边用来短路判断
+                    //只要不是null, 又和原来继续相等, 就继续删除当前位置上的元素
+                    while (bag[i] != null && bag[i].equals(entry)) {
+                        removeEntry(i);
+                    }
+                }
+
+            }
+        }
+        return result;
+    }
+
+
+    public int getInternalSize() {
+        return bag.length;
+    }
 }

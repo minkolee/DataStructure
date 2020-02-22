@@ -1,7 +1,7 @@
 package datastructure.chapter1;
 
 
-public class ArrayBag<T> implements BagInterface<T> {
+public class ArrayBag<T extends Comparable<T>> implements BagInterface<T> {
 
     private T[] bag;
 

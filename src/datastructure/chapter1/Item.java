@@ -1,6 +1,6 @@
 package datastructure.chapter1;
 
-public class Item {
+public class Item implements Comparable<Item> {
 
     private int price;
     private String name;
@@ -46,5 +46,10 @@ public class Item {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int compareTo(Item o) {
+        return this.price - o.price;
     }
 }
