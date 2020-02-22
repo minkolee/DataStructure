@@ -1,7 +1,10 @@
 package datastructure.chapter1;
 
 
-public class ArrayBag<T> implements BagInterface<T> {
+import java.util.Arrays;
+import java.util.Random;
+
+public class ResizableArrayBag<T> implements BagInterface<T> {
 
     private T[] bag;
 
@@ -9,13 +12,13 @@ public class ArrayBag<T> implements BagInterface<T> {
 
     private static final int DEFAULT_CAPACITY = 25;
 
-    private boolean initialized;
+    private boolean initialized = false;
 
     private static final int MAX_CAPACITY = 10000;
 
 
     @SuppressWarnings("unchecked")
-    public ArrayBag(int capacity) {
+    public ResizableArrayBag(int capacity) {
         if (capacity > MAX_CAPACITY) {
             throw new RuntimeException("Max bag capacity exceeds 10000");
         }
@@ -26,7 +29,7 @@ public class ArrayBag<T> implements BagInterface<T> {
     }
 
 
-    public ArrayBag() {
+    public ResizableArrayBag() {
         this(DEFAULT_CAPACITY);
     }
 
@@ -46,17 +49,31 @@ public class ArrayBag<T> implements BagInterface<T> {
         return numberOfEntries == 0;
     }
 
+    //修改实现, 当数组满的时候不是返回false, 而是增加数组的大小. 可以定义一个私有方法来操作
     @Override
     public boolean add(T newEntry) {
         checkInitialized();
         boolean isAddSuccess = true;
         if (isArrayFull()) {
-            isAddSuccess = false;
-        }else {
-            bag[numberOfEntries] = newEntry;
-            numberOfEntries++;
+            doubleCapacity();
         }
+
+        bag[numberOfEntries] = newEntry;
+        numberOfEntries++;
+
         return isAddSuccess;
+    }
+
+    private void doubleCapacity() {
+        int length = 2 * bag.length;
+        checkCapacity(length);
+        bag = Arrays.copyOf(bag, length);
+    }
+
+    private void checkCapacity(int capacity) {
+        if (capacity > MAX_CAPACITY) {
+            throw new RuntimeException("Cannot Resize Bag because exceeded MAX CAPACITY = 10000");
+        }
     }
 
     private boolean isArrayFull() {
@@ -135,6 +152,27 @@ public class ArrayBag<T> implements BagInterface<T> {
             }
         }
         return index;
+    }
+
+    public T replace(T newEntry, T targetEntry) {
+        if (newEntry == null || targetEntry ==null) {
+            throw new RuntimeException("两个参数都不能为null");
+        }
+        T result = null;
+        int index = getIndexOf(targetEntry);
+        if (index > -1) {
+            result = bag[index];
+            bag[index] = newEntry;
+        }
+        return result;
+    }
+
+    public T removeRandom() {
+        if (!isEmpty()) {
+            Random random = new Random();
+            return removeEntry(random.nextInt(numberOfEntries));
+        }
+        return null;
     }
 
 }
