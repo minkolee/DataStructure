@@ -289,4 +289,23 @@ public class ResizableArrayBag<T> implements BagInterface<T> {
         return finalResult;
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean equals(Object obj) {
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        if (this.numberOfEntries != ((ResizableArrayBag<T>) obj).getCurrnetSize()) {
+            return false;
+        }
+
+        for (int i = 0; i < numberOfEntries; i++) {
+            if (this.getFrequencyOf(bag[i]) != ((ResizableArrayBag<T>) obj).getFrequencyOf(bag[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
