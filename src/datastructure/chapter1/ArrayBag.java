@@ -1,7 +1,7 @@
 package datastructure.chapter1;
 
 
-public class ArrayBag<T extends Comparable<T>> implements BagInterface<T> {
+public class ArrayBag<T> implements BagInterface<T> {
 
     private T[] bag;
 
@@ -20,6 +20,7 @@ public class ArrayBag<T extends Comparable<T>> implements BagInterface<T> {
             throw new RuntimeException("Max bag capacity exceeds 10000");
         }
 
+        //因为Object没有实现Comparable类型, 不能进行强制类型转换.
         bag = (T[]) new Object[capacity];
         numberOfEntries = 0;
         initialized = true;
@@ -135,6 +136,19 @@ public class ArrayBag<T extends Comparable<T>> implements BagInterface<T> {
             }
         }
         return index;
+    }
+
+    public T replace(T newEntry, T targetEntry) {
+        if (newEntry == null || targetEntry == null) {
+            throw new RuntimeException("两个参数都不能为null");
+        }
+        T result = null;
+        int index = getIndexOf(targetEntry);
+        if (index > -1) {
+            result = bag[index];
+            bag[index] = newEntry;
+        }
+        return result;
     }
 
 }

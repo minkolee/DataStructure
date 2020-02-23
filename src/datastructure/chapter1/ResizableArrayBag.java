@@ -4,17 +4,17 @@ package datastructure.chapter1;
 import java.util.Arrays;
 import java.util.Random;
 
-public class ResizableArrayBag<T extends Comparable<T>> implements BagInterface<T> {
+public class ResizableArrayBag<T> implements BagInterface<T> {
 
-    private T[] bag;
+    protected T[] bag;
 
-    private int numberOfEntries;
+    protected int numberOfEntries;
 
-    private static final int DEFAULT_CAPACITY = 25;
+    protected static final int DEFAULT_CAPACITY = 25;
 
-    private boolean initialized = false;
+    protected boolean initialized = false;
 
-    private static final int MAX_CAPACITY = 10000;
+    protected static final int MAX_CAPACITY = 10000;
 
 
     @SuppressWarnings("unchecked")
@@ -113,7 +113,6 @@ public class ResizableArrayBag<T extends Comparable<T>> implements BagInterface<
 
     @Override
     public boolean contains(T anEntry) {
-
         return getIndexOf(anEntry) >= 0;
     }
 
@@ -129,7 +128,7 @@ public class ResizableArrayBag<T extends Comparable<T>> implements BagInterface<
         return removeEntry(index) != null;
     }
 
-    private T removeEntry(int index) {
+    protected T removeEntry(int index) {
         checkInitialized();
         if (index == -1 || isEmpty()) {
             return null;
@@ -139,6 +138,11 @@ public class ResizableArrayBag<T extends Comparable<T>> implements BagInterface<
         bag[index] = bag[numberOfEntries - 1];
         bag[numberOfEntries - 1] = null;
         numberOfEntries--;
+
+        if (isTooBig()) {
+            reduceArray();
+        }
+
         return result;
     }
 
@@ -184,7 +188,6 @@ public class ResizableArrayBag<T extends Comparable<T>> implements BagInterface<
     public T removeEvery(T entry) {
 
         T result = null;
-
         if (!isEmpty()) {
             for (int i = 0; i < numberOfEntries; i++) {
                 //只要能找到, 第一次删除必定成功
@@ -202,8 +205,88 @@ public class ResizableArrayBag<T extends Comparable<T>> implements BagInterface<
         return result;
     }
 
-
     public int getInternalSize() {
         return bag.length;
     }
+
+    protected boolean isTooBig() {
+        return numberOfEntries < bag.length / 2 && bag.length > 20;
+    }
+
+    private void reduceArray() {
+        int length = bag.length;
+        if (length <= 20) {
+            return;
+        }
+        bag = Arrays.copyOf(bag, length * 3 / 4);
+    }
+
+    public ResizableArrayBag<T> union(ResizableArrayBag<T> anotherBag) {
+        ResizableArrayBag<T> unionResult = new ResizableArrayBag<>(this.numberOfEntries + anotherBag.numberOfEntries);
+        for (int i = 0; i < numberOfEntries; i++) {
+            unionResult.add(bag[i]);
+        }
+        for (int i = 0; i < anotherBag.numberOfEntries; i++) {
+            unionResult.add(anotherBag.bag[i]);
+        }
+        return unionResult;
+    }
+
+
+    public ResizableArrayBag<T> intersection(ResizableArrayBag<T> anotherBag) {
+        ResizableArrayBag<T> intersectionResult = new ResizableArrayBag<>();
+        for (int i = 0; i < numberOfEntries; i++) {
+            int number = anotherBag.getFrequencyOf(bag[i]);
+            //只有当前元素也在对面存在, 而且当前元素不存在于结果中的时候才进行操作
+            if (number > 0 && !intersectionResult.contains(bag[i])) {
+                int thisNumber = this.getFrequencyOf(bag[i]);
+                //取两个数量的较小部分 = count
+                int count = Math.min(number, thisNumber);
+                //然后将当前元素添加count次
+                while (count > 0) {
+                    intersectionResult.add(bag[i]);
+                    count--;
+                }
+            }
+        }
+
+        int length = intersectionResult.getCurrnetSize();
+
+        ResizableArrayBag<T> finalResult = new ResizableArrayBag<>(length);
+        for (int i = 0; i < length; i++) {
+            finalResult.add(intersectionResult.bag[i]);
+        }
+
+        return finalResult;
+    }
+
+
+    public ResizableArrayBag<T> difference(ResizableArrayBag<T> anotherBag) {
+        ResizableArrayBag<T> differenceResult = new ResizableArrayBag<>();
+        for (int i = 0; i < numberOfEntries; i++) {
+            int number = anotherBag.getFrequencyOf(bag[i]);
+//            System.out.println("当前的元素是: " + bag[i]);
+            if (!differenceResult.contains(bag[i])) {
+                int thisNumber = this.getFrequencyOf(bag[i]);
+                //根据两个数量来得到结果 count, 如果自己的数量比其大, 就添加差额, 如果相等或者小于0, 就不添加.
+                int count = Math.max(thisNumber - number, 0);
+                //然后将当前元素添加count次
+//                System.out.println("当前的值是: " + bag[i] + " 在自己包中出现几次: " + thisNumber + " 在另外一个包内出现几次: " + number + "要添加几次: " + count);
+                while (count > 0) {
+                    differenceResult.add(bag[i]);
+                    count--;
+                }
+            }
+        }
+
+        int length = differenceResult.getCurrnetSize();
+
+        ResizableArrayBag<T> finalResult = new ResizableArrayBag<>(length);
+        for (int i = 0; i < length; i++) {
+            finalResult.add(differenceResult.bag[i]);
+        }
+
+        return finalResult;
+    }
+
 }

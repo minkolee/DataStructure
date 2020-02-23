@@ -14,7 +14,7 @@ public class OnlineShopper {
                 new Item("Sunflower Seeds", 1295),
         };
 
-        ArrayBag<Item> shoppingCart = new ArrayBag<>(4);
+        ResizableArrayBagComparable<Item> shoppingCart = new ResizableArrayBagComparable<>(4);
 
         //添加了四个项目
         for (Item nextItem : items) {
@@ -24,9 +24,9 @@ public class OnlineShopper {
         System.out.println(Arrays.toString(shoppingCart.toArray()));
 
 
-        ResizableArrayBag<Item> bag = transferFixedBagToResizableBag(shoppingCart);
+//        ResizableArrayBag<Item> bag = transferFixedBagToResizableBag(shoppingCart);
 
-        System.out.println(Arrays.toString(bag.toArray()));
+        System.out.println(Arrays.toString(shoppingCart.toArray()));
 
 
     }
