@@ -20,7 +20,4 @@ public interface BagInterface<T> {
 
     T[] toArray();
 
-    T replace(T newEntry, T oldEntry);
-
-
 }
