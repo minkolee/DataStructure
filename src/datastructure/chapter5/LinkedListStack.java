@@ -59,6 +59,7 @@ public class LinkedListStack<T> implements Stack<T> {
         numberOfEntries = 0;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public T[] toArray() {
         T[] result = (T[]) new Object[numberOfEntries];

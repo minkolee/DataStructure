@@ -11,4 +11,6 @@ public interface Stack<T> {
     boolean isEmpty();
 
     void clear();
+
+    T[] toArray();
 }
