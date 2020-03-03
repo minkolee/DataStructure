@@ -3,7 +3,6 @@ package datastructure.chapter5.exercise;
 import alog4e.libs.In;
 import datastructure.chapter5.LinkedListStack;
 import datastructure.chapter5.Postfix;
-import javafx.geometry.Pos;
 
 public class Exercise {
 

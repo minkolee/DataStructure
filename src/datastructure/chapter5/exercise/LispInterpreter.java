@@ -82,7 +82,7 @@ public class LispInterpreter {
 
         String result = valueStack.pop().toString();
 
-        if (valueStack.isEmpty()) {
+        if (valueStack.isEmpty() && operatorStack.isEmpty()) {
             return result;
         } else {
             throw new IllegalArgumentException("表达式有误");
@@ -91,7 +91,7 @@ public class LispInterpreter {
 
 
     /**
-     *
+     * 这个函数用来根据运算符从栈中取出操作数进行计算, 并将结果放入栈中
      * @param operator 单字符的操作符
      * @param valueStack 存放值的栈
      */
