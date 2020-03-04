@@ -1,6 +1,7 @@
 package datastructure.chapter2;
 
 
+import datastructure.chapter07.LearningProcess;
 import datastructure.chapter1.ArrayBag;
 import datastructure.chapter1.ResizableArrayBag;
 
@@ -50,7 +51,6 @@ public class OnlineShopperDoubleLink {
         shoppingCart.remove();
         System.out.println(Arrays.toString(shoppingCart.toArray()));        shoppingCart.remove();
         System.out.println(Arrays.toString(shoppingCart.toArray()));
-
 
 
 
