@@ -106,4 +106,46 @@ public class LinkedListStack<T> implements Stack<T> {
         firstNode = newNode;
         numberOfEntries++;
     }
+
+    public void showData() {
+        recursionFromRecent(firstNode);
+    }
+
+
+    private void recursionFromRecent(Node node) {
+        if (node != null) {
+            System.out.print(node.data + " | ");
+            recursionFromRecent(node.next);
+        }else{
+            System.out.println();
+        }
+    }
+
+    public void showDataFromOldest() {
+        recursionFromOldest(firstNode);
+    }
+
+
+    private void recursionFromOldest(Node node) {
+        if (node != null) {
+            recursionFromOldest(node.next);
+            System.out.print(node.data + " | ");
+        } else {
+            System.out.println();
+        }
+    }
+
+    public int countNodes() {
+        return countNode(firstNode);
+    }
+
+    private int countNode(Node node) {
+        if (node == null) {
+            return 0;
+        } else {
+            return 1 + countNode(node.next);
+        }
+    }
+
+
 }
