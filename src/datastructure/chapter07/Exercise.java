@@ -136,16 +136,16 @@ public class Exercise {
         //如果长度为0, 视为true
         if (s.length() == 0) {
             return true;
-        //如果字符串长度为1, 视为true
+            //如果字符串长度为1, 视为true
         } else if (s.length() == 1) {
             return true;
-        //如果字符串至少长度为2, 比较第一个与最后一个字符串, 如果相同, 返回继续比较去头去尾的字符串的结果
+            //如果字符串至少长度为2, 比较第一个与最后一个字符串, 如果相同, 返回继续比较去头去尾的字符串的结果
         } else if (s.charAt(0) == s.charAt(s.length() - 1)) {
             System.out.println(s.charAt(0) + " | " + s.charAt(s.length() - 1));
             String s1 = s.substring(1, s.length() - 1);
             System.out.println(s1);
             return isPalindromic(s1);
-        //比较第一个与最后一个字符串失败, 就返回false
+            //比较第一个与最后一个字符串失败, 就返回false
         } else {
             System.out.println(s.charAt(0) + " | " + s.charAt(s.length() - 1));
             String s1 = s.substring(1, s.length() - 1);
@@ -237,7 +237,40 @@ public class Exercise {
     //写不出来, 只能想到迭代或者先排序再写, 用递归咋写呢.
 
     //EX24 返回全排列
-    //递归思路是, 一串字符串的全排列, 就是这个字符串的每个字符与其他组合
+    //递归思路是, 一串字符串的全排列, 就是这个字符串的每个字符与剩下的组合
+    //这个代码是找到的, 自己实在想不出来....
+
+    public static void permutation(char[] s, int from, int to) {
+        if (to <= 1)
+            return;
+        if (from == to) {
+            System.out.println(s);
+        } else {
+            for (int i = from; i <= to; i++) {
+                swap(s, i, from); //交换前缀，使其产生下一个前缀
+                permutation(s, from + 1, to);
+                swap(s, from, i); //将前缀换回，继续做上一个前缀的排列
+            }
+        }
+    }
+
+    public static void swap(char[] s, int i, int j) {
+        char tmp = s[i];
+        s[i] = s[j];
+        s[j] = tmp;
+    }
+
+
+    public static String removeIndexInString(int index, String s) {
+
+        if (index == 0) {
+            return s.substring(1, s.length());
+        } else if (index == s.length() - 1) {
+            return s.substring(0, s.length() - 1);
+        } else {
+            return s.substring(0, index).concat(s.substring(index + 1, s.length()));
+        }
+    }
 
 
     public static void main(String[] args) {
@@ -265,5 +298,8 @@ public class Exercise {
 
 //        printNumber(120984,8);
 
+        char[] s = "abcd".toCharArray();
+
+        permutation(s, 0, 3);
     }
 }
