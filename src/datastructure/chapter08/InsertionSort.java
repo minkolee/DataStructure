@@ -1,5 +1,7 @@
 package datastructure.chapter08;
 
+import datastructure.chapter1.ArrayBag;
+
 import java.util.Arrays;
 
 public class InsertionSort {
@@ -37,25 +39,32 @@ public class InsertionSort {
     }
 
     public static <T extends Comparable<? super T>> void insertLastToRightPlace(T[] array, int n) {
-        //停机条件是n=1, 什么也不用干
 
         if (array.length == 1) {
             return;
         }
 
-
         //方法的核心功能就是将最后一个索引插入到合适的位置
         if (n > 1) {
+            //最后一个索引是n-1
+            insertLastToRightPlace(array, n - 1);
             T lastElement = array[n - 1];
+
+            //要将n-1 插入到 0 n-2中
             //依然是不断交换, 注意索引, 这里只需要比较到数组的最后一个元素就行了
-            for (int j = n - 1; j > 0; j--) {
-                if (array[j - 1].compareTo(array[j]) > 0) {
-                    array[j] = array[j - 1];
-                    array[j - 1] = lastElement;
+            for (int j = n - 2; j >= 0; j--) {
+//                System.out.println("进入到循环");
+                if (array[j].compareTo(array[j+1]) > 0) {
+//                    System.out.println("j+1=" + array[j + 1]);
+//                    System.out.println("j" + array[j]);
+                    array[j+1] = array[j];
+                    array[j] = lastElement;
                 }
             }
             //然后继续对剩下的部分进行操作
-            insertLastToRightPlace(array, n - 1);
+            System.out.println(Arrays.toString(array));
+
+
         }
     }
 
