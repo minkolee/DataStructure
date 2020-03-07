@@ -149,7 +149,7 @@ public class SelectionSort {
 
         //判断两个索引参数是否符合要求
         if (startIndex < 0 || startIndex > array.length - 1 || endIndex < 0 || endIndex > array.length - 1 || startIndex > endIndex) {
-            throw new IllegalArgumentException("索引超出范围");
+            throw new IllegalArgumentException("索引超出范围. startIndex=" + startIndex + " endIndex=" + endIndex);
         }
 
         //主排序算法, 对于数组中每一个元素, 获取其到endIndex之间的最小值, 然后交换二者的位置, 注意, 其实只需要遍历到倒数第二个元素即可, 因为不管交换不交换, 结果都正确.
@@ -185,7 +185,7 @@ public class SelectionSort {
 
         //判断两个索引参数是否符合要求
         if (startIndex < 0 || startIndex > array.length - 1 || endIndex < 0 || endIndex > array.length - 1 || startIndex > endIndex) {
-            throw new IllegalArgumentException("索引超出范围");
+            throw new IllegalArgumentException("索引超出范围. startIndex=" + startIndex + " endIndex=" + endIndex);
         }
 
         //停机条件是startIndex=endIndex

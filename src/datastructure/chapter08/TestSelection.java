@@ -1,14 +1,9 @@
 package datastructure.chapter08;
 
-import alog4e.chapter02.sort01.Insertion;
-import datastructure.chapter1.ArrayBag;
-import datastructure.ex03.CarA;
-import datastructure.ex03.CarB;
-
 import java.util.Arrays;
 import java.util.Random;
 
-public class Test {
+public class TestSelection {
 
     public static void fillArray(Integer[] array, int length) {
         Random random = new Random();
