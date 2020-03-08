@@ -1,9 +1,11 @@
 package datastructure.chapter07;
 
 import alog4e.libs.Counter;
+import datastructure.chapter08.SelectionSort;
 import datastructure.chapter5.LinkedListStack;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Exercise {
@@ -235,10 +237,77 @@ public class Exercise {
     //EX18 寻找Comparable数组中第二小的对象. 思路是初始化两个数值, 一个是最小值, 一个是第二小的值, 然后遍历, 如果下一个值比最小的小, 就更新最小和次小. 如果比第二个小但比第一个大, 就更新次小, 如果大于等于第二小, 就不更新
     //迭代的方法会了, 如何改成递归呢. 我们的方法可以在一个数组中找到最小的两个数字, 只要变成先找到最开始的两个数较大的, 然后与后边找到的较大的进行运算.
     //写不出来, 只能想到迭代或者先排序再写, 用递归咋写呢.
+    //迭代想出来了, 假如我们的方法可以找到一个数组的第二小的值, 那只需要对n-1的数组找到第二小的值, 对其找出最小值, 然后将这两个值和数组的第一个元素进行比较即可.
+
+    public static <T extends Comparable<? super T>> T findSecondMin(T[] array, int startIndex, int endIndex) {
+        if (startIndex < 0 || endIndex < 0 || startIndex > endIndex || startIndex > array.length - 1 || endIndex > array.length - 1) {
+            throw new IllegalArgumentException("索引不正确: startIndex" + startIndex + " endIndex=" + endIndex);
+        }
+
+        //停机条件1 数组只有一个元素, 返回那个元素
+        if (startIndex == endIndex) {
+            return array[startIndex];
+        }
+
+        //停机条件2 数组只有一个元素, 返回较大的元素
+        if (endIndex - startIndex == 1) {
+            if (array[startIndex].compareTo(array[endIndex]) > 0) {
+                return array[startIndex];
+            } else {
+                return array[endIndex];
+            }
+        }
+
+        //数组第一个元素
+        T element1 = array[startIndex];
+
+        //数组剩下部分的第二小元素
+        T element2 = findSecondMin(array, startIndex + 1, endIndex);
+
+        //数组剩下部分的最小元素
+        T element3 = findMin(array, startIndex + 1, endIndex);
+
+        //进行比较
+        //如果第一个元素小于后边数组的最小值, 那第二小就是最小值
+        if (element1.compareTo(element3) < 0) {
+            return element3;
+        //如果第一个元素大于等于后边数组的最小值, 但是小于后边数组的第二小值, 那第一个元素就是整个数组的第二小值
+        } else if (element1.compareTo(element2) < 0) {
+            return element1;
+        //如果第一个元素大于等于后边数组的第二小值, 那后边数组的第二小值就是整个数组的第二小值
+        } else {
+            return element2;
+        }
+    }
+
+    public static <T extends Comparable<? super T>> T findMin(T[] array, int startIndex, int endIndex) {
+        if (startIndex < 0 || endIndex < 0 || startIndex > endIndex || startIndex > array.length - 1 || endIndex > array.length - 1) {
+            throw new IllegalArgumentException("索引不正确: startIndex" + startIndex + " endIndex=" + endIndex);
+        }
+
+        T min = array[startIndex];
+
+        for (int i = startIndex; i <= endIndex; i++) {
+            if (min.compareTo(array[i]) > 0) {
+                min = array[i];
+            }
+        }
+
+        return min;
+
+    }
 
 
 
-    //EX24 返回全排列
+
+
+
+
+
+
+
+
+        //EX24 返回全排列
     //递归思路是, 一串字符串的全排列, 就是这个字符串的每个字符与剩下的组合
     //这个代码是找到的, 自己实在想不出来....
 
@@ -299,9 +368,26 @@ public class Exercise {
 //        System.out.println(fib(10));
 
 //        printNumber(120984,8);
+//
+//        char[] s = "abcd".toCharArray();
+//
+//        permutation(s, 0, 3);
 
-        char[] s = "abcd".toCharArray();
+        int count = 4;
+        Random random = new Random();
+        Integer[] array = new Integer[count];
 
-        permutation(s, 0, 3);
+        for (int i = 0; i < count; i++) {
+            array[i] = random.nextInt(count * 3 + 1);
+        }
+
+        System.out.println(Arrays.toString(array));
+
+
+        System.out.println(findSecondMin(array, 0, array.length - 1));
+
+        SelectionSort.sort(array);
+        System.out.println(Arrays.toString(array));
+
     }
 }
