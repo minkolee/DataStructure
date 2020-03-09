@@ -128,7 +128,7 @@ public class BubbleSort {
 
 
     /**
-     * 迭代方式实现冒泡排序的方法. 改进的冒泡排序, 每次追踪一下上次交换的发生的位置, 扫描到那个索引即可.
+     * 迭代方式实现冒泡排序的方法. 改进的冒泡排序, 每次追踪一下上次交换的发生的位置, 只会扫描到那个索引即可. 如果一次扫描中没有发生任何交换, 则说明数组有序, 结束排序
      *
      * @param array      要排序的数组
      * @param startIndex 要排序的部分开始索引
@@ -140,32 +140,48 @@ public class BubbleSort {
 
         checkArguments(array, startIndex, endIndex);
         if (startIndex != endIndex) {
+            int lastSwapIndex = endIndex;
 
             //从start开始, 到endIndex之前一个元素即可, 因为是向后比较, 无需遍历到最后一个元素
             //但是如果上一次交换发生在某个位置, 下一次只需要扫描到那个位置的
             for (int i = startIndex; i < endIndex; i++) {
                 //对于其中的每一个元素, 从其当前位置到最后的位置-1的位置, 不断与后边一个元素比较, 如果大于, 就交换位置
-                int j = startIndex;
+                //这里需要控制j循环的终点, 但是必须用一个中间变量承载, 不能即时变动
+                int lastTimeIndex = lastSwapIndex;
+                //每次都设置一个布尔, 假设本次没有发生任何交换
+                boolean isSwaped = false;
 
-                while (j < endIndex) {
 
+                for (int j = startIndex; j < lastTimeIndex; j++) {
                     if (!reverse) {
                         if (array[j].compareTo(array[j + 1]) > 0) {
                             T temp = array[j + 1];
                             array[j + 1] = array[j];
                             array[j] = temp;
                             //发生了交换, 将lastSwapIndex设置为此时的j即可.
+                            lastSwapIndex = j;
+                            isSwaped = true;
                         }
                     } else {
                         if (array[j].compareTo(array[j + 1]) < 0) {
                             T temp = array[j + 1];
                             array[j + 1] = array[j];
                             array[j] = temp;
+                            lastSwapIndex = j;
+                            isSwaped = true;
                         }
                     }
-
-                    j++;
                 }
+
+                //如果这一次没有发生任何交换, 则说明已经排序完毕
+                if (!isSwaped) {
+                    return;
+                }
+
+
+                System.out.println("遍历完第" + i + "个元素之后的lastSwapIndex=" + lastSwapIndex);
+                System.out.println(Arrays.toString(array));
+
             }
         }
 
@@ -175,6 +191,7 @@ public class BubbleSort {
 
     /**
      * 递归版本. 思路是, 将整个数组的最大值交换到最后, 然后对n-1数组排好序, 整个数组就有序了. 停机条件是数组长度为1就不用排了.
+     *
      * @param array      要排序的数组
      * @param startIndex 要排序的部分开始索引
      * @param endIndex   要排序的部分的结束索引
