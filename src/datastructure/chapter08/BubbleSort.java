@@ -1,17 +1,14 @@
 package datastructure.chapter08;
 
-
 import java.util.Arrays;
 
-public class ShellSort {
+public class BubbleSort {
 
-    /**
-     * 给数组开头的count个元素进行升序排列
-     *
-     * @param array 数组
-     * @param count 从开始要排序的元素的数量
-     * @param <T>   泛型参数,必须实现Comparable接口
-     */
+    //冒泡排序, 本质就是从数组的头部开始, 不断看谁大, 就交换位置, 最后交换到最后的一定是最大的,然后对剩下的数组再重复这个过程
+    //所以排序可以分为两个部分
+    //一个辅助功能方法, 用于将指定的开始索引和结束索引中的最大值不断交换到最后.
+    //然后有一个排序方法, 就是通过传递参数.
+
     public static <T extends Comparable<? super T>> void sortFromStart(T[] array, int count) {
 
         //判断参数是否合理, 由于核心函数会判断参数是否有问题, 所以这里只需要判断count即可, 等于0或者1直接返回
@@ -131,113 +128,91 @@ public class ShellSort {
 
 
     /**
-     * 包装后的希尔排序核心排序方法, 是另外一个重载sort方法的包装
+     * 迭代方式实现冒泡排序的方法. 改进的冒泡排序, 每次追踪一下上次交换的发生的位置, 扫描到那个索引即可.
      *
      * @param array      要排序的数组
-     * @param startIndex 要排序的范围的起始索引
-     * @param endIndex   要排序的范围的结束索引
-     * @param reverse    是否升序, false为升序, true为降序
-     * @param <T>        泛型参数,必须实现Comparable接口
+     * @param startIndex 要排序的部分开始索引
+     * @param endIndex   要排序的部分的结束索引
+     * @param reverse    是否降序
+     * @param <T>        泛型参数, 实现Comparable接口
      */
     private static <T extends Comparable<? super T>> void sort(T[] array, int startIndex, int endIndex, boolean reverse) {
-        int step = array.length / 2;
-
-        while (step > 0) {
-
-            if (step % 2 == 0) {
-                //当step是偶数的时候, 将其加1传递给排序方法
-                sort(array, startIndex, endIndex, step + 1, reverse);
-            } else {
-                //如果是奇数就不做变更
-                sort(array, startIndex, endIndex, step, reverse);
-            }
-
-            step = step / 2;
-        }
-    }
-
-
-    /**
-     * 希尔排序的单次排以步长间隔的数组的方法, 迭代版本
-     *
-     * @param array      要排序的数组
-     * @param startIndex 要排序部分开始的索引
-     * @param endIndex   要排序部分结束的索引
-     * @param step       希尔排序所需的步长, 初始是数组长度/2
-     * @param reverse    是否降序排列, true为降序, false为升序
-     * @param <T>        泛型参数,必须实现Comparable接口
-     */
-    private static <T extends Comparable<? super T>> void sort(T[] array, int startIndex, int endIndex, int step, boolean reverse) {
-        if (array.length == 0 || array.length == 1) {
-            return;
-        }
 
         checkArguments(array, startIndex, endIndex);
+        if (startIndex != endIndex) {
 
-        //希尔排序要遍历的元素, 实际上是从startIndex开始, 每次加上步长的元素, 所以i每次应该增加step长度. 这里就还是从头遍历, 方便控制索引
-        //
-        for (int i = startIndex; i <= endIndex; i += step) {
+            //从start开始, 到endIndex之前一个元素即可, 因为是向后比较, 无需遍历到最后一个元素
+            //但是如果上一次交换发生在某个位置, 下一次只需要扫描到那个位置的
+            for (int i = startIndex; i < endIndex; i++) {
+                //对于其中的每一个元素, 从其当前位置到最后的位置-1的位置, 不断与后边一个元素比较, 如果大于, 就交换位置
+                int j = startIndex;
 
-            //核心方法也需要修改, 并不是插入到startIndex 到 i 之间的所有元素, 而是startIndex 到 i 之间以 step为间隔的元素.
-            insertIntoArray(array, startIndex, i, step, reverse);
-            System.out.println(Arrays.toString(array));
-        }
-    }
+                while (j < endIndex) {
 
-    /**
-     * 将currentIndex位置上的元素, 合理插入到 按照步长分割的其左侧数组中的方法
-     * 本方法辅助希尔排序方法完成工作
-     *
-     * @param array        要排序的数组
-     * @param startIndex   要排序的部分的开始索引位置
-     * @param currentIndex 当前索引位置
-     * @param step         希尔排序所需的步长
-     * @param reverse      是否降序, true为降序, false为升序
-     * @param <T>          泛型参数,必须实现Comparable接口
-     */
-    private static <T extends Comparable<? super T>> void insertIntoArray(T[] array, int startIndex, int currentIndex, int step, boolean reverse) {
+                    if (!reverse) {
+                        if (array[j].compareTo(array[j + 1]) > 0) {
+                            T temp = array[j + 1];
+                            array[j + 1] = array[j];
+                            array[j] = temp;
+                            //发生了交换, 将lastSwapIndex设置为此时的j即可.
+                        }
+                    } else {
+                        if (array[j].compareTo(array[j + 1]) < 0) {
+                            T temp = array[j + 1];
+                            array[j + 1] = array[j];
+                            array[j] = temp;
+                        }
+                    }
 
-        T element = array[currentIndex];
-        int index = currentIndex;
-
-        //这里需要比较 当前元素, 也就是currentIndex, 与其 减去步长之后的元素, 不过不能超过数组左边界, 所以加上一个判断条件
-        while (index > startIndex && index - step >= 0) {
-
-            //当前元素与减去步长之后的元素比较
-            if (!reverse) {
-                if (element.compareTo(array[index - step]) < 0) {
-                    array[index] = array[index - step];
-                    index -= step;
-                } else {
-                    break;
-                }
-            } else {
-                if (element.compareTo(array[index - step]) > 0) {
-                    array[index] = array[index - step];
-                    index -= step;
-                } else {
-                    break;
+                    j++;
                 }
             }
-
         }
 
-        //循环结束的时候, index就指向应该插入的位置, 如果element是最小, 此时的索引就是0, 否则就是某个应该插入的位置. 其之前的位置都已经被右移了一格
-        //将element插入到当前位置
-        array[index] = element;
     }
 
+    //递归思路是. 如果递归方法可以完成升序, 只需要将一个数组的最大值放到最后, 然后对前边的数组进行排序, 整个数组就有序了
+
     /**
-     * 检查参数是否出现问题的函数, 如果参数有问题, 抛出运行时错误
-     *
+     * 递归版本. 思路是, 将整个数组的最大值交换到最后, 然后对n-1数组排好序, 整个数组就有序了. 停机条件是数组长度为1就不用排了.
      * @param array      要排序的数组
-     * @param startIndex 要排序部分的起始索引
-     * @param endIndex   要排序部分的结束索引
-     * @param <T>        泛型参数,必须实现Comparable接口
+     * @param startIndex 要排序的部分开始索引
+     * @param endIndex   要排序的部分的结束索引
+     * @param reverse    是否降序
+     * @param <T>        泛型参数, 实现Comparable接口
      */
+    public static <T extends Comparable<? super T>> void recursionSort(T[] array, int startIndex, int endIndex, boolean reverse) {
+        checkArguments(array, startIndex, endIndex);
+        //如果不相等, 交换最大值到最后, 然后对前边n-1个排序
+        if (startIndex != endIndex) {
+
+            //将startIndex-endIndex之间的最大值冒泡到最后
+            for (int j = startIndex; j < endIndex; j++) {
+                if (!reverse) {
+                    if (array[j].compareTo(array[j + 1]) > 0) {
+                        T temp = array[j + 1];
+                        array[j + 1] = array[j];
+                        array[j] = temp;
+                    }
+                } else {
+                    if (array[j].compareTo(array[j + 1]) < 0) {
+                        T temp = array[j + 1];
+                        array[j + 1] = array[j];
+                        array[j] = temp;
+                    }
+                }
+            }
+            //对前边n-1个数组排序
+            recursionSort(array, startIndex, endIndex - 1, reverse);
+        }
+    }
+
+
     private static <T> void checkArguments(T[] array, int startIndex, int endIndex) {
         if (startIndex < 0 || endIndex < 0 || startIndex > array.length - 1 || endIndex > array.length - 1 || startIndex > endIndex) {
             throw new IllegalArgumentException("索引超出范围. startIndex=" + startIndex + " endIndex=" + endIndex);
         }
     }
+
+
 }

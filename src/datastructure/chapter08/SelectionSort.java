@@ -1,5 +1,7 @@
 package datastructure.chapter08;
 
+import java.util.Arrays;
+
 /**
  * 选择排序类
  */
@@ -164,6 +166,9 @@ public class SelectionSort {
 
             //交换当前索引和最大/最小值索引的内容
             swap(array, i, swapIndex);
+
+            //打印每次排序后的内容
+            System.out.println(Arrays.toString(array));
         }
     }
 
