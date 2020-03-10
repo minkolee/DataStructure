@@ -224,7 +224,14 @@ public class BubbleSort {
         }
     }
 
-
+    /**
+     * 检测参数合理性的方法
+     *
+     * @param array      要排序的数组
+     * @param startIndex 要排序部分的开始索引
+     * @param endIndex   要排序部分的结束索引
+     * @param <T>        泛型参数, 实现Comparable接口
+     */
     private static <T> void checkArguments(T[] array, int startIndex, int endIndex) {
         if (startIndex < 0 || endIndex < 0 || startIndex > array.length - 1 || endIndex > array.length - 1 || startIndex > endIndex) {
             throw new IllegalArgumentException("索引超出范围. startIndex=" + startIndex + " endIndex=" + endIndex);
