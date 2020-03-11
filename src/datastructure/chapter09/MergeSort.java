@@ -1,5 +1,7 @@
 package datastructure.chapter09;
 
+import java.util.Arrays;
+
 public class MergeSort {
 
     public static <T extends Comparable<? super T>> void sortFromStart(T[] array, int count) {
@@ -233,5 +235,6 @@ public class MergeSort {
         if (startIndex < 0 || endIndex < 0 || startIndex > array.length - 1 || endIndex > array.length - 1 || startIndex > endIndex) {
             throw new IllegalArgumentException("索引超出范围. startIndex=" + startIndex + " endIndex=" + endIndex);
         }
+
     }
 }
