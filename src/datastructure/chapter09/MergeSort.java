@@ -209,7 +209,6 @@ public class MergeSort {
             sort(array, startIndex, (startIndex + endIndex) / 2, reverse);
             sort(array, (startIndex + endIndex) / 2 + 1, endIndex, reverse);
             merge(array, startIndex, (startIndex + endIndex) / 2, (startIndex + endIndex) / 2 + 1, endIndex, tempArray, reverse);
-
         }
 
     }
