@@ -1,5 +1,7 @@
 package datastructure.chapter09;
 
+import datastructure.chapter08.InsertionSort;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -133,8 +135,15 @@ public class QuickSort {
      * @param <T>        泛型参数,必须实现Comparable接口
      */
     private static <T extends Comparable<? super T>> void sort(T[] array, int startIndex, int endIndex, boolean reverse) {
-        if (startIndex < endIndex) {
+        if (endIndex - startIndex + 1 < 10) {
+            System.out.println("进行插入排序了");
+            if (!reverse) {
+                InsertionSort.sortBetweenIndex(array, startIndex, endIndex);
+            } else {
+                InsertionSort.sortBetweenIndexDesc(array, startIndex, endIndex);
+            }
 
+        } else {
             int pivotIndex = partition(array, startIndex, endIndex, reverse);
             sort(array, startIndex, pivotIndex - 1, reverse);
             sort(array, pivotIndex + 1, endIndex, reverse);
@@ -179,6 +188,11 @@ public class QuickSort {
         } else {
             //先强行选择枢轴索引和对应的元素
             int pivot = (startIndex + endIndex) / 2;
+
+            //这里新增确定三元枢轴排序的方法
+            sortFirstMiddleLast(array, startIndex, pivot, endIndex, reverse);
+
+            System.out.println("三元枢轴排过序之后是 startIndex=" + startIndex + " " + array[startIndex] + " pivot=" + pivot + " " + array[pivot] + " endIndex=" + endIndex + " " + array[endIndex]);
 
             T pivotElement = array[pivot];
 
@@ -257,45 +271,55 @@ public class QuickSort {
     }
 
 
-    public static void main(String[] args) throws InterruptedException {
+    private static <T extends Comparable<? super T>> void sortFirstMiddleLast(T[] array, int firstIndex, int middleIndex, int lastIndex, boolean reverse) {
 
-        int j = 1;
+        T a = array[firstIndex];
+        T b = array[middleIndex];
+        T c = array[lastIndex];
 
-        Random random = new Random();
-
-        while (j < 10000) {
-            int count = random.nextInt(10) + random.nextInt(10);
-
-            Integer[] array = new Integer[count];
-
-            for (int i = 0; i < count; i++) {
-                array[i] = random.nextInt(count * 3) + 1;
+        //默认是升序的情况
+        //a>=b的情况
+        if (a.compareTo(b) >= 0) {
+            //如果b>=c, 按照 c b a 排列
+            if (b.compareTo(c) >= 0) {
+                array[firstIndex] = c;
+                array[middleIndex] = b;
+                array[lastIndex] = a;
+                //如果a>=c>b, 按照a c b排列
+            } else if (a.compareTo(c) >= 0) {
+                array[firstIndex] = b;
+                array[middleIndex] = c;
+                array[lastIndex] = a;
+                //如果c>a>=b, 按照b a c 排列
+            } else {
+                array[firstIndex] = b;
+                array[middleIndex] = a;
+                array[lastIndex] = c;
             }
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            System.out.println(Arrays.toString(array));
-
-            sort(array, 0, array.length - 1, true);
-//            System.out.println(partition(array, 0, array.length - 1, true));
-
-            System.out.println(Arrays.toString(array));
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            j++;
-            Thread.sleep(1000);
-
+            //a<b的情况
+        } else {
+            //b>a>c
+            if (a.compareTo(c) >= 0) {
+                array[firstIndex] = c;
+                array[middleIndex] = a;
+                array[lastIndex] = b;
+                //b>c>a
+            } else if (b.compareTo(c) >= 0) {
+                array[firstIndex] = a;
+                array[middleIndex] = c;
+                array[middleIndex] = b;
+                //c>b>a
+            } else {
+                array[firstIndex] = a;
+                array[middleIndex] = b;
+                array[lastIndex] = c;
+            }
         }
 
-
-//        自己测试出来的, 要看枢轴位于第一个还是最后一个是不是出错
-//        Integer[] array2 = new Integer[]{77, 33, 8, 9, 37, 15, 28, 20, 20, 9, 35, 18, 23};
-//
-//        System.out.println(Arrays.toString(array2));
-//        System.out.println(partition(array2, 0, array2.length - 1, false));
-//        System.out.println(Arrays.toString(array2));
-
-//        sort(array2, 0, array2.length - 1, false);
-//
-//        System.out.println(Arrays.toString(array2));
-
+        //如果降序, 交换一下最大和最小值即可.
+        if (reverse) {
+            swap(array, firstIndex, lastIndex);
+        }
 
     }
 

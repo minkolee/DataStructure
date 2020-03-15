@@ -152,8 +152,6 @@ public class InsertionSort {
 
             //将当前元素插入到startIndex 到 i 之间的正确位置
             insertIntoArray(array, startIndex, i, reverse);
-            System.out.println(Arrays.toString(array));
-
         }
     }
 
