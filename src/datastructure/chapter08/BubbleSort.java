@@ -8,7 +8,6 @@ public class BubbleSort {
     //所以排序可以分为两个部分
     //一个辅助功能方法, 用于将指定的开始索引和结束索引中的最大值不断交换到最后.
     //然后有一个排序方法, 就是通过传递参数.
-
     public static <T extends Comparable<? super T>> void sortFromStart(T[] array, int count) {
 
         //判断参数是否合理, 由于核心函数会判断参数是否有问题, 所以这里只需要判断count即可, 等于0或者1直接返回
