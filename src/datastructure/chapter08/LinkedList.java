@@ -29,6 +29,8 @@ public class LinkedList<T extends Comparable<? super T>> {
     private boolean isSorted = false;
     private boolean isSortedDesc = false;
 
+    //添加一个lastNode引用
+    private Node lastNode = null;
 
     public LinkedList() {
         this.firstNode = null;
@@ -51,8 +53,8 @@ public class LinkedList<T extends Comparable<? super T>> {
             }
             isSorted = true;
             isSortedDesc = false;
+            refreshLastNode();
         }
-
     }
 
     /**
@@ -73,8 +75,8 @@ public class LinkedList<T extends Comparable<? super T>> {
             }
             isSortedDesc = true;
             isSorted = false;
+            refreshLastNode();
         }
-
     }
 
     /**
@@ -157,8 +159,15 @@ public class LinkedList<T extends Comparable<? super T>> {
     }
 
     public boolean add(T entry) {
+
         Node newNode = new Node(entry, firstNode);
         firstNode = newNode;
+
+        //如果lastNode为空, 就设置一次, 始终等于最后一个元素
+        if (this.lastNode == null) {
+            this.lastNode = newNode;
+        }
+
         numberOfEntries++;
         isSorted = false;
         isSortedDesc = false;
@@ -176,6 +185,11 @@ public class LinkedList<T extends Comparable<? super T>> {
             result = firstNode.data;
             firstNode = firstNode.next;
             numberOfEntries--;
+
+            //删除完一个元素之后, 如果firstNode为空就将last设置为空, 否则就不改变lastNode
+            if (firstNode == null) {
+                lastNode = null;
+            }
         }
         return result;
     }
@@ -193,6 +207,7 @@ public class LinkedList<T extends Comparable<? super T>> {
     public void clear() {
         this.firstNode = null;
         this.numberOfEntries = 0;
+        this.lastNode = null;
     }
 
     public Object[] toArray() {
@@ -211,4 +226,121 @@ public class LinkedList<T extends Comparable<? super T>> {
         return result;
     }
 
+    public void showLastNode() {
+        System.out.println(lastNode);
+    }
+
+    private void refreshLastNode() {
+        if (isEmpty()) {
+            this.lastNode = null;
+        } else {
+            this.lastNode = firstNode;
+            while (lastNode.next != null) {
+                lastNode = lastNode.next;
+            }
+        }
+    }
+
+    public boolean addToTail(T entry) {
+        if (isEmpty()) {
+            add(entry);
+        } else {
+            lastNode.next = new Node(entry);
+            lastNode = lastNode.next;
+            numberOfEntries++;
+            isSorted = false;
+            isSortedDesc = false;
+        }
+        return true;
+    }
+
+    /**
+     * 合并另外一个有序链表的方法, 仅在两个链表都有同样的序的时候工作
+     * @param another 要合并的另外一个链表
+     * @return 一个新的链表
+     */
+    public LinkedList<T> merge(LinkedList<T> another) {
+        LinkedList<T> result = new LinkedList<>();
+
+        //两个都是升序的情况下
+        if (this.isSorted) {
+            if (another.isSorted) {
+                Node currentNode1 = firstNode;
+                Node currentNode2 = another.firstNode;
+
+                //两个当前都不为空, 即链表没有遍历完的情况下
+                while (currentNode1 != null && currentNode2 != null) {
+                    //都是升序排列, 所以进行比较, 小的先放到新链表尾部去
+
+                    //如果当前的小就放当前的
+                    if (currentNode1.data.compareTo(currentNode2.data) < 0) {
+                        result.addToTail(currentNode1.data);
+                        currentNode1 = currentNode1.next;
+                    } else {
+                        result.addToTail(currentNode2.data);
+                        currentNode2 = currentNode2.next;
+                    }
+                }
+                //循环完毕之后有一个链表遍历完了, 检查另外一个没有遍历完的链表, 挨个把元素放进去
+                if (currentNode1 != null) {
+                    while (currentNode1 != null) {
+                        result.addToTail(currentNode1.data);
+                        currentNode1 = currentNode1.next;
+                    }
+                }
+
+                if (currentNode2 != null) {
+                    while (currentNode2 != null) {
+                        result.addToTail(currentNode2.data);
+                        currentNode2 = currentNode2.next;
+                    }
+                }
+                result.isSorted = true;
+            } else {
+                throw new RuntimeException("链表不是都有序, 无法合并");
+            }
+        } else if (isSortedDesc) {
+            if (another.isSortedDesc) {
+                Node currentNode1 = firstNode;
+                Node currentNode2 = another.firstNode;
+
+                //两个当前都不为空, 即链表没有遍历完的情况下
+                while (currentNode1 != null && currentNode2 != null) {
+                    //都是降序排列, 所以进行比较, 大的先放到新链表尾部去
+
+                    //如果当前是大的就先放当前的
+                    if (currentNode1.data.compareTo(currentNode2.data) > 0) {
+                        result.addToTail(currentNode1.data);
+                        currentNode1 = currentNode1.next;
+                    } else {
+                        result.addToTail(currentNode2.data);
+                        currentNode2 = currentNode2.next;
+                    }
+                }
+                //循环完毕之后有一个链表遍历完了, 检查另外一个没有遍历完的链表, 挨个把元素放进去
+                if (currentNode1 != null) {
+                    while (currentNode1 != null) {
+                        result.addToTail(currentNode1.data);
+                        currentNode1 = currentNode1.next;
+                    }
+                }
+
+                if (currentNode2 != null) {
+                    while (currentNode2 != null) {
+                        result.addToTail(currentNode2.data);
+                        currentNode2 = currentNode2.next;
+                    }
+                }
+
+                result.isSortedDesc = true;
+            } else {
+                throw new RuntimeException("链表不是都有序, 无法合并");
+
+            }
+        }else {
+            throw new RuntimeException("链表不是都有序, 无法合并");
+        }
+
+        return result;
+    }
 }

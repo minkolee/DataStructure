@@ -8,57 +8,31 @@ public class LinkedListSortTest {
     public static void main(String[] args) {
 
         LinkedList<Integer> linkedList = new LinkedList<>();
+        LinkedList<Integer> linkedList1 = new LinkedList<>();
+
+
 
         Random random = new Random();
+        int count = random.nextInt(15) + 5;
 
-        int count = 5;
-
-        for (int j = 0; j < count; j++) {
-            System.out.println("-----------------------------------------------------");
-            int number = count * 2;
-            for (int i = 0; i < number; i++) {
-                linkedList.add(random.nextInt(number * 3 + 1));
-            }
-
-            linkedList.showAllEntries();
-            if (j % 2 == 0) {
-                linkedList.sort();
-            } else {
-                linkedList.sortDesc();
-            }
-
-            linkedList.showAllEntries();
-
-            System.out.println("-----------------------------------------------------");
-
-        }
-
-        System.out.println("-----------------------------------------------------");
-        for (int j = 0; j < 10; j++) {
-            linkedList.add(random.nextInt(j * 3 + 1));
-
+        for (int i = 0; i < count; i++) {
+            linkedList.add(random.nextInt(count * 5));
+            linkedList1.add(random.nextInt(count * 5));
         }
 
         linkedList.showAllEntries();
+        linkedList1.showAllEntries();
 
         linkedList.sortDesc();
+        linkedList1.sortDesc();
 
         linkedList.showAllEntries();
+        linkedList1.showAllEntries();
 
-        linkedList.sort();
+        LinkedList<Integer> result = linkedList.merge(linkedList1);
 
-        linkedList.showAllEntries();
+        result.showAllEntries();
 
-        linkedList.remove();
-        linkedList.showAllEntries();
-
-        System.out.println(linkedList.remove());
-        System.out.println(linkedList.remove());
-        System.out.println(linkedList.remove());
-        System.out.println(linkedList.remove());
-        System.out.println(linkedList.remove());
-        System.out.println(linkedList.remove());
-        linkedList.showAllEntries();
-
+        result.showLastNode();
     }
 }
