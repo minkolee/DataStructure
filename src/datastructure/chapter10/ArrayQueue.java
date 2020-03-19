@@ -1,6 +1,7 @@
 package datastructure.chapter10;
 
 
+import java.util.Arrays;
 
 /**
  * 无需计数器的队列类
@@ -15,7 +16,7 @@ public class ArrayQueue<T> implements QueueInterface<T> {
 
     private boolean initialized = false;
 
-    private static final int DEFAULT_CAPACITY = 50;
+    private static final int DEFAULT_CAPACITY = 16;
 
     private static final int MAX_CAPACITY = 10000;
 
@@ -103,7 +104,42 @@ public class ArrayQueue<T> implements QueueInterface<T> {
         backIndex = queue.length - 1;
     }
 
+    @SuppressWarnings("unchecked")
     private void checkCapacity() {
+
+        checkInitialization();
+
+        //如果数组是满的, 先看当前容量是不是已经超过上限
+        if (frontIndex == (backIndex + 2) % queue.length) {
+            if (queue.length == MAX_CAPACITY + 1) {
+                throw new RuntimeException("队列无法再扩容");
+            }
+
+            //没有超过上限, 比较MAX_CAPACITY+1 与 队列的实际要放的内容的长度乘以2再加1, 哪个小, 就作为新数组的长度.
+            T[] newQueue = (T[]) new Object[Math.min((queue.length - 1) * 2 + 1, MAX_CAPACITY + 1)];
+
+            //代码执行到这里, 至少扩容到还可以放下一个元素. 先把原来的数组的所有东西都复制进来, 移动firstIndex直到isEmpty()即可
+
+            int startIndex = 0;
+            while (!isEmpty()) {
+                newQueue[startIndex] = queue[frontIndex];
+                frontIndex = (frontIndex + 1) % queue.length;
+                startIndex++;
+            }
+
+            queue = newQueue;
+            frontIndex = 0;
+            backIndex = startIndex - 1;
+        }
+
+    }
+
+    public void show() {
+        System.out.println(Arrays.toString(queue));
+        System.out.print("当前frontIndex = " + frontIndex);
+        System.out.print("\t当前backIndex = " + backIndex);
+        System.out.println("\t当前length = " + queue.length);
+        System.out.println("----------------------------------------------------------------------------------------");
 
     }
 
