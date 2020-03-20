@@ -1,5 +1,9 @@
 package datastructure.chapter10;
 
+import java.util.AbstractQueue;
+import java.util.Deque;
+import java.util.LinkedList;
+
 public class TestLoopedQueue {
 
     public static void main(String[] args) {
@@ -61,12 +65,6 @@ public class TestLoopedQueue {
 
         queue.dequeue();
         queue.show();
-        queue.show2();
-
-        queue.dequeue();
-        queue.show();
-        queue.show2();
-
 
 //
         queue.enqueue("1");
@@ -124,8 +122,6 @@ public class TestLoopedQueue {
             System.out.print(queue.dequeue());
             System.out.print("|");
         }
-
-
 
     }
 }

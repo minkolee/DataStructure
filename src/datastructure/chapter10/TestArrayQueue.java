@@ -119,7 +119,5 @@ public class TestArrayQueue {
             System.out.print("|");
         }
 
-
-
     }
 }
