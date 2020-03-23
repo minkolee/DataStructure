@@ -13,7 +13,7 @@ public class TestLinkedQueue {
         for (int i = 0; i < count; i++){
 
             queue.enqueue(random.nextInt(count * 5) + 1);
-
+            System.out.println(queue);
         }
     }
 
