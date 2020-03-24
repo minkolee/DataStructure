@@ -1,6 +1,5 @@
 package datastructure.chapter10;
 
-
 public interface PriorityQueueInterface<T> {
 
     void add(T entry);
@@ -16,3 +15,4 @@ public interface PriorityQueueInterface<T> {
     void clear();
 
 }
+
