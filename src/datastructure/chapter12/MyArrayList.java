@@ -51,7 +51,7 @@ public class MyArrayList<T> implements ListInterface<T> {
     public void add(int newPosition, T newEntry) {
 
         if (newPosition > numberOfEntries) {
-            throw new RuntimeException("插入位置的索引不合法");
+            throw new RuntimeException("插入位置的索引不合法: " + newPosition);
         }
 
         if (isFull()) {
