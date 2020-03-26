@@ -1,6 +1,6 @@
 package datastructure.chapter12;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class MyLinkedListTest {
 
@@ -34,13 +34,65 @@ public class MyLinkedListTest {
         linkedList1.add(1, "newnwen");
         System.out.println(Arrays.toString(linkedList1.toArray()) + " | " + linkedList1.getLength());
 
-        System.out.println(linkedList1.replace(0, "jlksdfjklsdflkjsfd")); ;
+        System.out.println(linkedList1.replace(0, "123")); ;
         System.out.println(Arrays.toString(linkedList1.toArray()) + " | " + linkedList1.getLength());
 
         System.out.println(linkedList1.getEntry(2));
 
         System.out.println(linkedList1.getEntry(3));
-        System.out.println(linkedList1.contains("vjlkjlk"));
+        System.out.println(linkedList1.contains("421"));
 
+        System.out.println(Arrays.toString(linkedList1.toArray()) + " | " + linkedList1.getLength());
+
+        linkedList1.iterator().forEachRemaining(s -> System.out.println(s.charAt(0)));
+
+        ListIterator listIterator = new ListIterator() {
+            @Override
+            public boolean hasNext() {
+                return false;
+            }
+
+            @Override
+            public Object next() {
+                return null;
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return false;
+            }
+
+            @Override
+            public Object previous() {
+                return null;
+            }
+
+            @Override
+            public int nextIndex() {
+                return 0;
+            }
+
+            @Override
+            public int previousIndex() {
+                return 0;
+            }
+
+            @Override
+            public void remove() {
+
+            }
+
+            @Override
+            public void set(Object o) {
+
+            }
+
+            @Override
+            public void add(Object o) {
+
+            }
+        };
+
+        LinkedList<String> arrayList = new LinkedList<>();
     }
 }

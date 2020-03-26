@@ -1,6 +1,7 @@
 package datastructure.chapter12;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 public class MyArrayListTest {
 
@@ -23,7 +24,6 @@ public class MyArrayListTest {
         list.add("djflk13");
         list.add("djflk14");
         list.add("djflk15");
-        System.out.println(list.getInnerLength());
         list.add(0, "nenene1");
         list.add(1, "nenene2");
         list.add(0, "nenene0");
@@ -32,7 +32,6 @@ public class MyArrayListTest {
             list.add(i, String.valueOf(i) + "gugug");
         }
 
-        System.out.println(list.getInnerLength());
         System.out.println(Arrays.toString(list.toArray()));
         System.out.println(list.getLength());
 
@@ -50,6 +49,30 @@ public class MyArrayListTest {
         list.remove(list.getLength() - 1);
 
         System.out.println(Arrays.toString(list.toArray()));
+        System.out.println(list.getLength());
+        System.out.println("测试迭代");
+        Iterator<String> iterator = list.iterator();
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        iterator.forEachRemaining(stringBuilder::append);
+
+        System.out.println(stringBuilder.toString());
+
+        while (!list.isEmpty()) {
+            list.remove(0);
+        }
+        System.out.println(Arrays.toString(list.toArray()));
+        System.out.println(list.getLength());
+
+        iterator = list.iterator();
+
+        stringBuilder = new StringBuilder();
+
+        iterator.forEachRemaining(stringBuilder::append);
+
+        System.out.println(stringBuilder.toString()+"end");
+
 //
 //        MyArrayList<String> list2 = new MyArrayList<>(1);
 //        System.out.println(list2.isEmpty());

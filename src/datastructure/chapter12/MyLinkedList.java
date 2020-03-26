@@ -1,7 +1,45 @@
 package datastructure.chapter12;
 
 
-public class MyLinkedList<T> implements ListInterface<T> {
+import java.util.Iterator;
+
+public class MyLinkedList<T> implements ListInterface<T>, Iterable<T> {
+
+    @Override
+    public Iterator<T> iterator() {
+        return new LinkedListIterator<>();
+    }
+
+    private class LinkedListIterator<T> implements Iterator<T> {
+
+        private Node currentNode;
+
+        private LinkedListIterator() {
+            this.currentNode = firstNode;
+        }
+
+        @Override
+        public boolean hasNext() {
+
+            return currentNode != null;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public T next() {
+            T result = (T) currentNode.data;
+            currentNode = currentNode.next;
+            return result;
+        }
+    }
+
+
+
+
+
+
+
+
 
     private class Node {
         private T data;

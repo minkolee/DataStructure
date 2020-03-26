@@ -1,6 +1,38 @@
 package datastructure.chapter12;
 
-public class MyArrayList<T> implements ListInterface<T> {
+import java.util.Iterator;
+
+public class MyArrayList<T> implements ListInterface<T>, Iterable<T> {
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ArrayListIterator<>();
+    }
+
+    private class ArrayListIterator<T> implements Iterator<T> {
+
+        private int number;
+
+        private int index = 0;
+
+        private ArrayListIterator() {
+            this.number = numberOfEntries;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index <= numberOfEntries - 1;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public T next() {
+            T result = (T) list[index];
+            index++;
+            return result;
+        }
+    }
+
 
     //内部数组
     private T[] list;
@@ -165,10 +197,6 @@ public class MyArrayList<T> implements ListInterface<T> {
             if (numberOfEntries >= 0) System.arraycopy(list, 0, tempArray, 0, numberOfEntries);
             list = tempArray;
         }
-    }
-
-    public int getInnerLength() {
-        return list.length;
     }
 
 }
