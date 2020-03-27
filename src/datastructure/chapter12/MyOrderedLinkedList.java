@@ -3,7 +3,62 @@ package datastructure.chapter12;
 
 import java.util.Iterator;
 
-public class MyLinkedList<T> implements ListInterface<T>, Iterable<T> {
+public class MyOrderedLinkedList<T extends Comparable<? super T>> implements OrderedListInterface<T>, Iterable<T> {
+
+    @Override
+    public void add(T entry) {
+        int currentIndex = 0;
+        Node currentNode = firstNode;
+
+        while (currentNode != null) {
+            if (entry.compareTo(currentNode.data) >= 0) {
+                currentIndex++;
+                currentNode = currentNode.next;
+            } else {
+                break;
+            }
+        }
+
+        //循环结束之后, currentIndex就是要插入的位置
+        add(currentIndex, entry);
+    }
+
+    @Override
+    public boolean remove(T anEntry) {
+        int index = getPosition(anEntry);
+
+        if (index < 0) {
+            return false;
+        } else {
+            remove(index);
+            return true;
+        }
+    }
+
+    @Override
+    public int getPosition(T anEntry) {
+        Node currentNode = firstNode;
+
+        boolean found = false;
+
+        int index = 0;
+
+        while (currentNode != null) {
+            if (currentNode.data.compareTo(anEntry) == 0) {
+                found = true;
+                break;
+            } else {
+                currentNode = currentNode.next;
+                index++;
+            }
+        }
+
+        if (found) {
+            return index;
+        } else {
+            return -1;
+        }
+    }
 
     @Override
     public Iterator<T> iterator() {
@@ -59,7 +114,7 @@ public class MyLinkedList<T> implements ListInterface<T>, Iterable<T> {
     private Node lastNode;
     private int numberOfEntries;
 
-    public MyLinkedList() {
+    public MyOrderedLinkedList() {
         initialize();
     }
 
@@ -69,25 +124,9 @@ public class MyLinkedList<T> implements ListInterface<T>, Iterable<T> {
         numberOfEntries = 0;
     }
 
-    @Override
-    public void add(T entry) {
-        //创建新节点
-        Node newNode = new Node(entry);
 
-        //如果线性表为空,要添加的节点同时是头节点和尾节点
-        if (isEmpty()) {
-            firstNode = newNode;
-            lastNode = newNode;
-            //如果不为空, lastNode一定不为空, 添加在尾部
-        } else {
-            lastNode.next = newNode;
-            lastNode = lastNode.next;
-        }
-        numberOfEntries++;
-    }
 
-    @Override
-    public void add(int newPosition, T newEntry) {
+    private void add(int newPosition, T newEntry) {
         //添加在指定位置,显然需要先检查索引.
         //思考最简单的例子,一个长度1的链表, 只可能添加在0或者1号位置, 所以newPosition <= numberOfEntries
         if (newPosition > numberOfEntries) {
@@ -98,10 +137,15 @@ public class MyLinkedList<T> implements ListInterface<T>, Iterable<T> {
 
         //这里需要考虑两种情况, 如果从0号位置插入,表示插入在链表头部. 如果从nubmerOfEntries位置插入, 表示从尾部插入, 剩下的就需要手工拼接一下
 
-        //0号位置插入的时候如果数组为空, 和普通插入一样
+        //0号位置插入的时候如果数组为空, 和普通插入一样. 如果不为空, 等于在头结点插入
         if (newPosition == 0) {
+            //0号位置插入的时候如果数组为空, 则新插入一个节点, 头尾都指向这个节点
             if (isEmpty()) {
-                add(newEntry);
+                Node newNode = new Node(newEntry);
+
+                firstNode = newNode;
+                lastNode = newNode;
+                numberOfEntries++;
                 //如果不为空, 则就是在链表头部添加节点
             } else {
                 Node newNode = new Node(newEntry);
@@ -110,10 +154,11 @@ public class MyLinkedList<T> implements ListInterface<T>, Iterable<T> {
                 numberOfEntries++;
             }
 
-            //如果索引和当前的元素数量相等,说明是从尾部插入, 也调用add方法即可
+            //如果索引和当前的元素数量相等,说明是从尾部插入, 只需要先插入, 再设置一下lastNode即可
         } else if (newPosition == numberOfEntries) {
-            add(newEntry);
-
+            lastNode.next = new Node(newEntry);
+            lastNode = lastNode.next;
+            numberOfEntries++;
             //剩下的情况表示不是头也不是尾,那么就需要找到要插入的节点的前一个元素.
             //简单分析一下,如果数组只有一个元素,插入点不是0就是1,会掉入上边两种情况.
             //如果数组长度为2,符合条件的是1,在1号位置插入需要获取0号位置的节点. 如果数组长度是3,符合条件的是1,2号位置, 要获取的节点位置是0,1 所以可见,从开头循环到newPosition - 1的位置即可
@@ -233,7 +278,7 @@ public class MyLinkedList<T> implements ListInterface<T>, Iterable<T> {
     @SuppressWarnings("unchecked")
     public T[] toArray() {
 
-        T[] result = (T[]) new Object[numberOfEntries];
+        T[] result = (T[]) new Comparable[numberOfEntries];
         Node currentNode = firstNode;
         for (int i = 0; i < numberOfEntries; i++) {
 
