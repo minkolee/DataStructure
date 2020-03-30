@@ -16,9 +16,16 @@ public class MyOrderedArrayListTest {
 
         System.out.println(Arrays.toString(list.toArray()) + "|" + list.getLength());
 
-        System.out.println(list.contains(10));
-        System.out.println(list.getPosition(10));
-        System.out.println(list.remove(Integer.valueOf(33)));
+        for (int i = 0; i < 15; i++) {
+            System.out.println(list.contains(i*2));
+            System.out.println(list.getPosition(i * 2));
+        }
+        System.out.println(list.contains(1));
+        System.out.println(list.getPosition(1));
+        System.out.println(list.contains(3));
+        System.out.println(list.getPosition(3));
+        System.out.println(list.contains(5));
+        System.out.println(list.getPosition(5));
 
 
         System.out.println(Arrays.toString(list.toArray()) + "|" + list.getLength());

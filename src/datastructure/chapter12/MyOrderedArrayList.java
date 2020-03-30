@@ -48,12 +48,25 @@ public class MyOrderedArrayList<T extends Comparable<? super T>> implements Orde
     @Override
     public int getPosition(T anEntry) {
 
-        for (int currentIndex = 0; currentIndex < numberOfEntries; currentIndex++) {
-            if (list[currentIndex].compareTo(anEntry) == 0) {
-                return currentIndex;
+        int firstIndex = 0;
+
+        int lastIndex = numberOfEntries - 1;
+
+        while (true) {
+            if (firstIndex > lastIndex) {
+                return -1;
             }
+
+            int middle = (firstIndex + lastIndex) / 2;
+            if (list[middle].compareTo(anEntry) == 0) {
+                return middle;
+            } else if (list[middle].compareTo(anEntry) < 0) {
+                firstIndex = middle + 1;
+            } else {
+                lastIndex = middle - 1;
+            }
+
         }
-        return -1;
     }
 
     @Override
@@ -201,13 +214,25 @@ public class MyOrderedArrayList<T extends Comparable<? super T>> implements Orde
     @Override
     public boolean contains(T anEntry) {
 
-        for (int i = 0; i < numberOfEntries; i++) {
-            if (list[i].equals(anEntry)) {
-                return true;
-            }
-        }
-        return false;
+        int firstIndex = 0;
 
+        int lastIndex = numberOfEntries - 1;
+
+        while (true) {
+            if (firstIndex > lastIndex) {
+                return false;
+            }
+
+            int middle = (firstIndex + lastIndex) / 2;
+            if (list[middle].compareTo(anEntry) == 0) {
+                return true;
+            } else if (list[middle].compareTo(anEntry) < 0) {
+                firstIndex = middle + 1;
+            } else {
+                lastIndex = middle - 1;
+            }
+
+        }
     }
 
     @Override
