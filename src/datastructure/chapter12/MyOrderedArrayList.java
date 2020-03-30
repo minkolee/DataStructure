@@ -2,7 +2,72 @@ package datastructure.chapter12;
 
 import java.util.Iterator;
 
-public class MyArrayList<T> implements ListInterface<T>, Iterable<T> {
+public class MyOrderedArrayList<T extends Comparable<? super T>> implements OrderedListInterface<T>, Iterable<T> {
+
+    @Override
+    public void add(T entry) {
+
+        boolean found = false;
+
+        int currentIndex = 0;
+
+        //数组本来为空则currentIndexy一开始就等于numberOfEntries, 逻辑也是对的
+        while (!found) {
+            //如果currentIndex 已经等于元素数量, 就break
+            if (currentIndex == numberOfEntries) {
+                break;
+            }
+
+
+            //要插入元素大于等于数组某个位置的元素, 向后移动currentIndex++
+            if (entry.compareTo(list[currentIndex]) >= 0) {
+                currentIndex++;
+            } else {
+                found = true;
+            }
+        }
+
+        //循环结束之后, currentIndex要么在末尾, 要么就在第一个大于要插入的元素的位置, 也就是需要将元素插入的位置
+
+        //调用私有方法在指定位置插入即可
+        add(currentIndex, entry);
+    }
+
+    @Override
+    public boolean remove(T anEntry) {
+        int index = getPosition(anEntry);
+
+        if (index < 0) {
+            return false;
+        } else {
+            remove(index);
+            return true;
+        }
+    }
+
+    @Override
+    public int getPosition(T anEntry) {
+
+        int firstIndex = 0;
+
+        int lastIndex = numberOfEntries - 1;
+
+        while (true) {
+            if (firstIndex > lastIndex) {
+                return -1;
+            }
+
+            int middle = (firstIndex + lastIndex) / 2;
+            if (list[middle].compareTo(anEntry) == 0) {
+                return middle;
+            } else if (list[middle].compareTo(anEntry) < 0) {
+                firstIndex = middle + 1;
+            } else {
+                lastIndex = middle - 1;
+            }
+
+        }
+    }
 
     @Override
     public Iterator<T> iterator() {
@@ -21,7 +86,7 @@ public class MyArrayList<T> implements ListInterface<T>, Iterable<T> {
 
         @Override
         public boolean hasNext() {
-            return index <= numberOfEntries - 1;
+            return index <= number - 1;
         }
 
         @Override
@@ -53,38 +118,28 @@ public class MyArrayList<T> implements ListInterface<T>, Iterable<T> {
 
     //根据传入的初始长度创建内部数组, 最小不短于默认长度
     @SuppressWarnings("unchecked")
-    public MyArrayList(int size) {
+    public MyOrderedArrayList(int size) {
         if (size > MAX_CAPACITY) {
             throw new RuntimeException("超过限制");
         } else if (size < DEFAULT_CAPACITY) {
             size = DEFAULT_CAPACITY;
         }
-        System.out.println(size);
-        list = (T[]) new Object[size];
+        System.out.println("创建成功长度为: " + size + " 的线性表");
+        list = (T[]) new Comparable[size];
         initialized = true;
     }
 
-    public MyArrayList() {
+    public MyOrderedArrayList() {
         this(DEFAULT_CAPACITY);
     }
 
-    @Override
-    public void add(T entry) {
-        checkInitialized();
-        if (isFull()) {
-            enlargeCapacity();
-        }
 
-        list[numberOfEntries] = entry;
-        numberOfEntries++;
-    }
-
-    @Override
-    public void add(int newPosition, T newEntry) {
+    private void add(int newPosition, T newEntry) {
 
         if (newPosition > numberOfEntries) {
             throw new RuntimeException("插入位置的索引不合法: " + newPosition);
         }
+
 
         if (isFull()) {
             enlargeCapacity();
@@ -149,7 +204,7 @@ public class MyArrayList<T> implements ListInterface<T>, Iterable<T> {
     @SuppressWarnings("unchecked")
     public T[] toArray() {
         checkInitialized();
-        T[] result = (T[]) new Object[numberOfEntries];
+        T[] result = (T[]) new Comparable[numberOfEntries];
 
         System.arraycopy(list, 0, result, 0, numberOfEntries);
 
@@ -159,13 +214,25 @@ public class MyArrayList<T> implements ListInterface<T>, Iterable<T> {
     @Override
     public boolean contains(T anEntry) {
 
-        for (int i = 0; i < numberOfEntries; i++) {
-            if (list[i].equals(anEntry)) {
-                return true;
-            }
-        }
-        return false;
+        int firstIndex = 0;
 
+        int lastIndex = numberOfEntries - 1;
+
+        while (true) {
+            if (firstIndex > lastIndex) {
+                return false;
+            }
+
+            int middle = (firstIndex + lastIndex) / 2;
+            if (list[middle].compareTo(anEntry) == 0) {
+                return true;
+            } else if (list[middle].compareTo(anEntry) < 0) {
+                firstIndex = middle + 1;
+            } else {
+                lastIndex = middle - 1;
+            }
+
+        }
     }
 
     @Override
@@ -193,7 +260,7 @@ public class MyArrayList<T> implements ListInterface<T>, Iterable<T> {
             throw new RuntimeException("线性表无法继续扩大");
         } else {
             //创建一个最长不超过MAX_CAPACITY的数组, 然后将数组复制过去
-            T[] tempArray = (T[]) new Object[Math.min(currentNumber * 2, MAX_CAPACITY)];
+            T[] tempArray = (T[]) new Comparable[Math.min(currentNumber * 2, MAX_CAPACITY)];
             if (numberOfEntries >= 0) System.arraycopy(list, 0, tempArray, 0, numberOfEntries);
             list = tempArray;
         }
