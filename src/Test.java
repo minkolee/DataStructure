@@ -6,8 +6,11 @@ public class Test {
 
     public static void main(String[] args) {
 
-        ProteinTranslator translator = new ProteinTranslator();
+        Grains grains = new Grains();
 
-        translator.translate("UGGUGUUAUUAAUGGUUU");
+        System.out.println(grains.grainsOnBoard());
+
+
+
     }
 }
