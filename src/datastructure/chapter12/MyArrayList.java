@@ -1,6 +1,8 @@
 package datastructure.chapter12;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class MyArrayList<T> implements ListInterface<T>, Iterable<T> {
 
@@ -59,7 +61,6 @@ public class MyArrayList<T> implements ListInterface<T>, Iterable<T> {
         } else if (size < DEFAULT_CAPACITY) {
             size = DEFAULT_CAPACITY;
         }
-        System.out.println(size);
         list = (T[]) new Object[size];
         initialized = true;
     }
@@ -197,6 +198,24 @@ public class MyArrayList<T> implements ListInterface<T>, Iterable<T> {
             if (numberOfEntries >= 0) System.arraycopy(list, 0, tempArray, 0, numberOfEntries);
             list = tempArray;
         }
+
+        Map<String, String> map = new HashMap<>();
+
+    }
+
+    public int getPosition(T anEntry) {
+
+        int result = -1;
+
+        for (int i = 0; i < numberOfEntries; i++) {
+            if (list[i].equals(anEntry)) {
+                result = i;
+                break;
+
+            }
+        }
+
+        return result;
     }
 
 }
