@@ -264,4 +264,29 @@ public class MyLinkedList<T> implements ListInterface<T>, Iterable<T> {
     public boolean isEmpty() {
         return numberOfEntries == 0 && firstNode == null && lastNode == null;
     }
+
+    public int getPosition(T anEntry) {
+
+        int result = -1;
+
+        boolean found = false;
+
+        Node currentNode = firstNode;
+        while (currentNode != null && !found) {
+            result = result + 1;
+            if (currentNode.data.equals(anEntry)) {
+                found = true;
+            }
+            currentNode = currentNode.next;
+        }
+
+        if (found) {
+            return result;
+
+        } else {
+            return -1;
+        }
+
+    }
+
 }
