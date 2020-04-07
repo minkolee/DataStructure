@@ -47,4 +47,17 @@ class BinaryNode<T> {
     public boolean isLeaf() {
         return leftNode == null && rightNode == null;
     }
+
+    public BinaryNode<T> copy() {
+        BinaryNode<T> newRoot = new BinaryNode<>(data);
+
+        if (leftNode != null) {
+            newRoot.setLeftNode(leftNode.copy());
+        }
+
+        if (rightNode != null) {
+            newRoot.setRightNode(rightNode.copy());
+        }
+        return newRoot;
+    }
 }
