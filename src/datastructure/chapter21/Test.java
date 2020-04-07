@@ -2,8 +2,6 @@ package datastructure.chapter21;
 
 import datastructure.chapter19.LinearDictionary;
 
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Random;
 
 public class Test {
