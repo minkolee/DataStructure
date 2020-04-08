@@ -60,4 +60,30 @@ class BinaryNode<T> {
         }
         return newRoot;
     }
+
+    public int getHeight() {
+        return getHeight(this);
+    }
+
+    private int getHeight(BinaryNode<T> node) {
+        if (node == null) {
+            return 0;
+        } else {
+            return 1 + Math.max(getHeight(node.getLeftNode()), getHeight(node.getRightNode()));
+        }
+    }
+
+    public int getNumberOfNodes() {
+        return getNumberOfNodes(this);
+    }
+
+    private int getNumberOfNodes(BinaryNode<T> node) {
+        if (node == null) {
+            return 0;
+        } else {
+            return getNumberOfNodes(node.getLeftNode()) + 1 + getNumberOfNodes(node.getRightNode());
+        }
+    }
+
+
 }

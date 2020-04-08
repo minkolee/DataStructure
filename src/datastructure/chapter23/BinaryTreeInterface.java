@@ -1,6 +1,6 @@
 package datastructure.chapter23;
 
-public interface BinaryTreeInterface<T> extends TreeInterface<T>, TreeIterator<T> {
+public interface BinaryTreeInterface<T> extends TreeInterface<T> {
 
     void setTree(T rootData);
 
