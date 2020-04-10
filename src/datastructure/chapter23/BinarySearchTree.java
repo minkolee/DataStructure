@@ -1,5 +1,6 @@
 package datastructure.chapter23;
 
+import alog4e.chapter01.section02.exercise.Node;
 import datastructure.chapter5.LinkedListStack;
 
 import java.util.Iterator;
@@ -235,8 +236,9 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
 
     /**
      * 在一棵树中删除指定的entry, 并且返回这棵树的根节点
+     *
      * @param rootNode 递归删除的主方法
-     * @param entry 要删除的项目
+     * @param entry    要删除的项目
      * @param oldEntry 保存要删除项目的值的对象
      * @return 根节点
      */
@@ -275,6 +277,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
 
     /**
      * 这个方法是将三种操作都归于同一个起点, 即找到要删除的节点, 将其当做一个子树的根节点, 然后来进行操作
+     *
      * @param rootNode 要删除的节点
      * @return 返回删除后新的根节点
      */
@@ -295,12 +298,12 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
             rootNode.setLeftNode(removeLargest(leftSubtreeRootNode));
 
 
-        //不满足上边条件, 则两个子节点至少有一个是null, 分别判断即可, 如果不是null, 只需要返回子节点, 这样上一层递归会接上当前节点的子节点, 也就相当于删除了当前节点
+            //不满足上边条件, 则两个子节点至少有一个是null, 分别判断即可, 如果不是null, 只需要返回子节点, 这样上一层递归会接上当前节点的子节点, 也就相当于删除了当前节点
 
-        //左边不为空就设置为左边
+            //左边不为空就设置为左边
         } else if (rootNode.getLeftNode() != null) {
             rootNode = rootNode.getLeftNode();
-        //左边为空就设置成右边, 不用管右边是不是为空, 为空也是正确的
+            //左边为空就设置成右边, 不用管右边是不是为空, 为空也是正确的
         } else rootNode = rootNode.getRightNode();
 
         return rootNode;
@@ -318,7 +321,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
         //如果没有右节点, 就返回左节点
         if (rootNode.getRightNode() == null) {
             return rootNode.getLeftNode();
-        //如果有右节点, 将当前节点的右节点设置成删除最大之后返回的新子树的根节点
+            //如果有右节点, 将当前节点的右节点设置成删除最大之后返回的新子树的根节点
         } else {
             rootNode.setRightNode(removeLargest(rootNode.getRightNode()));
             return rootNode;
@@ -348,4 +351,142 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
         }
     }
 
+
+    private class NodePair {
+        private BinaryNode<T> targetNode;
+        private BinaryNode<T> fatherNode;
+
+        public BinaryNode<T> getTargetNode() {
+            return targetNode;
+        }
+
+        public void setTargetNode(BinaryNode<T> targetNode) {
+            this.targetNode = targetNode;
+        }
+
+        public BinaryNode<T> getFatherNode() {
+            return fatherNode;
+        }
+
+        public void setFatherNode(BinaryNode<T> fatherNode) {
+            this.fatherNode = fatherNode;
+        }
+    }
+
+    public T iterRemove(T entry) {
+        //声明返回值
+        T result = null;
+
+        //这里使用一个辅助方法, 寻找到entry所在的节点及其父节点, 创建一个nodePair并返回这个对象, 以供后续使用.
+        NodePair nodePair = findNode(entry);
+
+        //从NodePair中取出查找结果
+
+        //targetNode存放要删除的节点
+        BinaryNode<T> targetNode = nodePair.getTargetNode();
+
+        //fatherNode是要删除的节点的父节点
+        BinaryNode<T> fatherNode = nodePair.getFatherNode();
+
+        //findNode方法中, 如果没有找到, 则targetNode会是null, 不进行任何操作
+
+        //找到节点的情况下
+        if (targetNode != null) {
+
+            result = targetNode.getData();
+
+            //如果这个节点有两个子节点
+            if (targetNode.getLeftNode() != null && targetNode.getRightNode() != null) {
+
+                //需要重新定位要删除的节点及其父节点, 这里再用一个辅助函数
+                nodePair = findFrontNode(targetNode);
+
+                //然后替换数据, 之后更新要删除的节点
+                targetNode.setData(nodePair.getTargetNode().getData());
+                targetNode = nodePair.getTargetNode();
+                fatherNode = nodePair.getFatherNode();
+            }
+
+            //现在所有的情况都收敛成删除至多一个子节点的节点了.用一个辅助方法删除之
+            removeTargetNode(fatherNode, targetNode);
+        }
+
+        return result;
+
+    }
+
+
+    private NodePair findNode(T entry) {
+        BinaryNode<T> father = null;
+        BinaryNode<T> target = root;
+        boolean found = false;
+        NodePair nodePair = new NodePair();
+
+        while (target != null && !found) {
+            if (entry.compareTo(target.getData()) == 0) {
+                nodePair.setFatherNode(father);
+                nodePair.setTargetNode(target);
+                found = true;
+            } else if (entry.compareTo(target.getData()) < 0) {
+                father = target;
+                target = target.getLeftNode();
+            } else {
+                father = target;
+                target = target.getRightNode();
+            }
+        }
+
+        if (!found) {
+            nodePair.setTargetNode(null);
+            nodePair.setFatherNode(null);
+        }
+        return nodePair;
+
+    }
+
+
+    private NodePair findFrontNode(BinaryNode<T> startNode) {
+        //获取左子树的根节点
+        BinaryNode<T> leftSubtreeNode = startNode.getLeftNode();
+
+        //然后将当前节点当成父节点, leftSubtreeNode当成子节点, 开始进行搜索
+
+        BinaryNode<T> father = startNode;
+        BinaryNode<T> target = leftSubtreeNode;
+
+        while (target.getRightNode() != null) {
+            father = target;
+            target = target.getRightNode();
+        }
+        //循环结束之后, target一定是一个没有右节点的节点, father是其父节点
+        //注意, 也可能父节点就是startNode, 子节点就是startNode的左子节点, 不过同样满足我们的要求.
+
+        //组装NodePair对象
+        NodePair nodePair = new NodePair();
+        nodePair.setFatherNode(father);
+        nodePair.setTargetNode(target);
+        return nodePair;
+    }
+
+    private void removeTargetNode(BinaryNode<T> fatherNode, BinaryNode<T> targetNode) {
+        //从前边的逻辑中可以发现, 程序能进到这个方法里, targetNode一定不会为空, 而且至多就一个子节点
+        //所以要看一下是不是根节点, 只需要重新设置根节点为其存在的那个子节点即可, 如果不是根节点, 那么father和target都存在, 删除之即可.
+
+        //找到targetNode的至多一个的子节点
+        BinaryNode<T> childNode;
+        if (targetNode.getRightNode() != null) {
+            childNode = targetNode.getRightNode();
+        } else {
+            childNode = targetNode.getLeftNode();
+        }
+
+        //如果删除的就是根节点, 就把子节点当成根节点
+        if (targetNode == root) {
+            setRootNode(childNode);
+
+        //如果不是根节点, 判断targetNode是父节点的左儿子还是右女儿, 然后把childNode挂在对应位置即可
+        } else if (fatherNode.getRightNode() == targetNode) {
+            fatherNode.setRightNode(childNode);
+        } else fatherNode.setLeftNode(childNode);
+    }
 }

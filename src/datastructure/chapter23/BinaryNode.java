@@ -85,5 +85,10 @@ class BinaryNode<T> {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "BinaryNode{" +
+                "data=" + data +
+                '}';
+    }
 }
