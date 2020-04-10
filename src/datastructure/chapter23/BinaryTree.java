@@ -4,9 +4,7 @@ import datastructure.chapter10.ArrayQueue;
 import datastructure.chapter10.LinkedQueue;
 import datastructure.chapter5.LinkedListStack;
 
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 public class BinaryTree<T> implements BinaryTreeInterface<T>, TreeIterator<T> {
