@@ -1,19 +1,18 @@
 package datastructure.chapter23;
 
-import alog4e.chapter01.section02.exercise.Node;
 import datastructure.chapter5.LinkedListStack;
 
 import java.util.Iterator;
 
-public class BinarySearchTree<T extends Comparable<? super T>> implements BinarySearchTreeInterface<T> {
+public class AVLBinarySearchTree<T extends Comparable<? super T>> implements BinarySearchTreeInterface<T> {
 
     private BinaryNode<T> root;
 
-    public BinarySearchTree() {
+    public AVLBinarySearchTree() {
         root = null;
     }
 
-    public BinarySearchTree(T data) {
+    public AVLBinarySearchTree(T data) {
         root = new BinaryNode<>(data);
     }
 
@@ -99,7 +98,12 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
             root = new BinaryNode<>(newEntry);
             return newEntry;
 
-        } else return iterableAdd(newEntry);
+        } else{
+            T result = add(newEntry, root);
+            root = rebalance(root);
+            return result;
+        }
+
     }
 
     private T add(T newEntry, BinaryNode<T> node) {
@@ -109,14 +113,18 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
             return result;
         } else if (newEntry.compareTo(node.getData()) < 0) {
             if (node.getLeftNode() != null) {
-                return add(newEntry, node.getLeftNode());
+                T result = add(newEntry, node.getLeftNode());
+                node.setLeftNode(rebalance(node.getLeftNode()));
+                return result;
             } else {
                 node.setLeftNode(new BinaryNode<>(newEntry));
                 return newEntry;
             }
         } else {
             if (node.getRightNode() != null) {
-                return add(newEntry, node.getRightNode());
+                T result = add(newEntry, node.getRightNode());
+                node.setRightNode(rebalance(node.getRightNode()));
+                return result;
             } else {
                 node.setRightNode(new BinaryNode<>(newEntry));
                 return newEntry;
@@ -230,7 +238,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
     public T remove(T entry) {
         ReturnObject oldEntry = new ReturnObject(null);
         BinaryNode<T> newRoot = removeEntry(getRootNode(), entry, oldEntry);
-        setRootNode(newRoot);
+        setRootNode(rebalance(newRoot));
         return oldEntry.get();
     }
 
@@ -271,6 +279,13 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
                 BinaryNode<T> rightChild = rootNode.getRightNode();
                 rootNode.setRightNode(removeEntry(rightChild, entry, oldEntry));
             }
+
+            if (rootNode != null) {
+
+                rootNode = rebalance(rootNode);
+
+            }
+
         }
         return rootNode;
     }
@@ -296,7 +311,6 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
 
             //更新当前节点的左侧子树为删除了前驱节点的子树
             rootNode.setLeftNode(removeLargest(leftSubtreeRootNode));
-
 
             //不满足上边条件, 则两个子节点至少有一个是null, 分别判断即可, 如果不是null, 只需要返回子节点, 这样上一层递归会接上当前节点的子节点, 也就相当于删除了当前节点
 
@@ -497,4 +511,78 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Binary
             fatherNode.setRightNode(childNode);
         } else fatherNode.setLeftNode(childNode);
     }
+
+
+    private BinaryNode<T> rotateLeft(BinaryNode<T> nodeN) {
+        BinaryNode<T> nodeC = nodeN.getRightNode();
+        BinaryNode<T> T2 = nodeC.getLeftNode();
+
+        nodeN.setRightNode(T2);
+        nodeC.setLeftNode(nodeN);
+
+        return nodeC;
+    }
+
+    private BinaryNode<T> rotateRight(BinaryNode<T> nodeN) {
+        BinaryNode<T> nodeC = nodeN.getLeftNode();
+        BinaryNode<T> T2 = nodeC.getRightNode();
+
+        nodeN.setLeftNode(T2);
+        nodeC.setRightNode(nodeN);
+
+        return nodeC;
+    }
+
+    private BinaryNode<T> rotateLeftRight(BinaryNode<T> nodeN) {
+        nodeN.setLeftNode(rotateLeft(nodeN.getLeftNode()));
+
+        return rotateRight(nodeN);
+    }
+
+    private BinaryNode<T> rotateRightLeft(BinaryNode<T> nodeN) {
+        nodeN.setRightNode(rotateRight(nodeN.getRightNode()));
+
+        return rotateLeft(nodeN);
+    }
+
+    private BinaryNode<T> rebalance(BinaryNode<T> nodeN) {
+        int heightDifferent = getHeightDifferent(nodeN);
+
+        //左边比右边高超过1
+        if (heightDifferent > 1) {
+            //左边还比右边高, 右旋转
+            if (getHeightDifferent(nodeN.getLeftNode()) > 0) {
+                nodeN = rotateRight(nodeN);
+            //右边比左边高, 左-右旋转
+            } else {
+                nodeN = rotateLeftRight(nodeN);
+            }
+
+        //右边比左边高超过1
+        }else if (heightDifferent < -1) {
+
+            //右边还比左边高, 是左旋转
+            if (getHeightDifferent(nodeN.getRightNode()) < 0) {
+                nodeN = rotateLeft(nodeN);
+
+            //左边比右边高, 右-左旋转
+            } else {
+                nodeN = rotateRightLeft(nodeN);
+            }
+        }
+        return nodeN;
+    }
+
+    private int getHeightDifferent(BinaryNode<T> nodeN) {
+        int leftHeight;
+        int rightHeight;
+
+        leftHeight = nodeN.getLeftNode() == null ? 0 : nodeN.getLeftNode().getHeight();
+        rightHeight = nodeN.getRightNode() == null ? 0 : nodeN.getRightNode().getHeight();
+
+        return leftHeight - rightHeight;
+    }
+
+
+
 }

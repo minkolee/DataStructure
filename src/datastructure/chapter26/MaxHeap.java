@@ -1,7 +1,5 @@
 package datastructure.chapter26;
 
-import java.util.PriorityQueue;
-
 public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterface<T> {
 
     //实际实现堆的数组
