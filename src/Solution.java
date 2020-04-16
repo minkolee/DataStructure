@@ -1,51 +1,50 @@
-import java.util.Stack;
-
 class Solution {
-    public boolean isValid(String s) {
 
-        if (s.isEmpty()) {
-            return true;
-        }
+    public int strStr(String haystack, String needle) {
 
-        Stack<Character> stack = new Stack<>();
+        int i;
 
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
+        boolean found = true;
 
-            switch (c) {
-                case '{':
-                case '[':
-                case '(':
-                    stack.push(c);
-                    break;
-                case '}':
-                    if (stack.isEmpty()) {
-                        return false;
-                    }
-                    if (stack.pop() != '{') {
-                        return false;
-                    }
-                    break;
-                case ')':
-                    if (stack.isEmpty()) {
-                        return false;
-                    }
-                    if (stack.pop() != '(') {
-                        return false;
-                    }
-                    break;
-                case ']':
-                    if (stack.isEmpty()) {
-                        return false;
-                    }
-                    if (stack.pop() != '[') {
-                        return false;
-                    }
-                    break;
+
+        for (i = 0; i < haystack.length(); i++) {
+
+            int j = 0;
+
+            while (found) {
+                if (j + i > haystack.length()) {
+                    return -1;
+                }
+
+                if (needle.charAt(j) != haystack.charAt(i)) {
+                    found = false;
+                    i = i + j + 1;
+                }
+                j++;
             }
 
+            if (found) {
+                return i;
+            }
 
         }
-        return stack.isEmpty();
+
+        if (found) {
+            return i;
+        } else {
+            return -1;
+        }
+
+
+
     }
+
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+
+        System.out.println(solution.strStr("hello", "ll"));
+    }
+
+
 }
