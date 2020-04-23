@@ -39,6 +39,8 @@ public class DateCalculator {
 
         System.out.println(weekDay(time1));
         System.out.println(weekDay(time2));
+
+        System.out.println("\n\b");
     }
 
 }
