@@ -49,11 +49,8 @@ public interface VertexInterface<T> {
     boolean hasPredecessor();
 
     //设置顶点的数据
-    void setCost(double Newcost);
+    void setCost(double newCost);
 
     //获取顶点的数据
     double getCost();
-
-
-
 }
