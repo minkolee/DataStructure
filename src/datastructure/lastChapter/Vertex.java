@@ -2,11 +2,12 @@ package datastructure.lastChapter;
 
 import datastructure.chapter12.MyLinkedList;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class Vertex<T> implements VertexInterface<T> {
+class Vertex<T> implements VertexInterface<T> {
 
     //存放T类型数据的域
     private T label;
@@ -39,6 +40,14 @@ public class Vertex<T> implements VertexInterface<T> {
 
         protected double getWeight() {
             return weight;
+        }
+
+        @Override
+        public String toString() {
+            return "Edge{" +
+                    "vertex=" + vertex.getLabel() +
+                    ", weight=" + weight +
+                    '}';
         }
     }
 
@@ -227,5 +236,15 @@ public class Vertex<T> implements VertexInterface<T> {
     @Override
     public double getCost() {
         return cost;
+    }
+
+    @Override
+    public String toString() {
+        return "Vertex{" +
+                "label=" + label +
+                ", visited=" + visited +
+                ", edgeList=" + Arrays.toString(edgeList.toArray())  +
+                ", previousVertex=" + previousVertex +
+                '}';
     }
 }

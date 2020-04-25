@@ -61,7 +61,6 @@ public class ZipDictionary<K, V> implements Dictionary<K, V> {
 
         checkSize();
 
-
         Entry<K, V> newEntry = new Entry<>(key, value);
 
         //关键步骤, 计算散列码并压缩到下标中.
