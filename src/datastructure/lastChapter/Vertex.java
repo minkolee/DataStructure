@@ -247,4 +247,16 @@ class Vertex<T> implements VertexInterface<T> {
                 ", previousVertex=" + previousVertex +
                 '}';
     }
+
+
+    public double getWeightToVertex(VertexInterface<T> target) {
+
+        for (Edge edge : edgeList) {
+            if (edge.vertex.equals(target)) {
+                return edge.weight;
+            }
+        }
+        return -1;
+    }
+
 }

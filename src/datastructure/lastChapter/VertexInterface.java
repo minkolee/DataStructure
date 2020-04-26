@@ -53,4 +53,7 @@ public interface VertexInterface<T> {
 
     //获取顶点的数据
     double getCost();
+
+    //获取当前顶点到指定点的权重
+    double getWeightToVertex(VertexInterface<T> target);
 }
