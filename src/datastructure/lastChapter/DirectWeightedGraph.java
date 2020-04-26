@@ -2,8 +2,6 @@ package datastructure.lastChapter;
 
 import datastructure.chapter10.ArrayQueue;
 import datastructure.chapter10.QueueInterface;
-import datastructure.chapter19.Dictionary;
-import datastructure.chapter21.ZipDictionary;
 import datastructure.chapter5.LinkedListStack;
 import datastructure.chapter5.Stack;
 
@@ -233,10 +231,7 @@ public class DirectWeightedGraph<T> implements GraphInterface<T>, GraphAlgorithm
 
     }
 
-    @Override
-    public Stack<T> getTopologicalOrder() {
-        return null;
-    }
+
 
     //获取最短路径长度和路径栈
     @Override
@@ -334,7 +329,7 @@ public class DirectWeightedGraph<T> implements GraphInterface<T>, GraphAlgorithm
 
             //从优先队列里弹出一项
             Entry anEntry = entries.remove();
-            System.out.println("队列中弹出的是: " + anEntry);
+//            System.out.println("队列中弹出的是: " + anEntry);
             //如果这一项其中的顶点还没有被访问过
             if (!anEntry.currentVertext.isVisited()) {
 
@@ -361,7 +356,7 @@ public class DirectWeightedGraph<T> implements GraphInterface<T>, GraphAlgorithm
                             double totalWeight = currentVertex.getWeightToVertex(anNeighbor) + currentVertex.getCost();
                             //将邻居节点, 到这个邻居节点的总权重, 前驱节点=当前节点包装对象扔进优先队列.
                             Entry newEntry = new Entry(anNeighbor, totalWeight, currentVertex);
-                            System.out.println("放入队列的是: " + newEntry);
+//                            System.out.println("放入队列的是: " + newEntry);
                             entries.add(newEntry);
                         }
 
@@ -379,8 +374,10 @@ public class DirectWeightedGraph<T> implements GraphInterface<T>, GraphAlgorithm
                 path.push(endVertex.getLabel());
                 endVertex = endVertex.getPredecessor();
             }
+            resetVertices();
             return weight;
         } else {
+            resetVertices();
             return -1;
         }
 
@@ -413,7 +410,53 @@ public class DirectWeightedGraph<T> implements GraphInterface<T>, GraphAlgorithm
         }
     }
 
+    //获取有向无环图的拓扑序
+    @Override
+    public Stack<T> getTopologicalOrder() {
+        //创建结果栈
+        Stack<T> result = new LinkedListStack<>();
 
+        //获取顶点的个数.
+        int count = vertices.size();
+
+        //只要还有顶点没有压完, 最后一定压完全部顶点
+        while (count != 0) {
+            //对于每一个顶点
+            for (VertexInterface<T> vertex : vertices.values()) {
+                if (!vertex.isVisited() && isAllNeighborVisited(vertex)) {
+                    vertex.visit();
+                    result.push(vertex.getLabel());
+                    count--;
+                }
+            }
+
+        }
+
+        resetVertices();
+
+        return result;
+
+    }
+
+    private boolean isAllNeighborVisited(VertexInterface<T> vertex) {
+        boolean result = true;
+
+        //没有邻居也返回true
+        if (!vertex.hasNeighbor()) {
+            return true;
+        }
+
+        Iterator<VertexInterface<T>> interfaceIterator = vertex.getNeighborIterator();
+
+        while (interfaceIterator.hasNext()) {
+            if (!interfaceIterator.next().isVisited()) {
+                result = false;
+                break;
+            }
+        }
+
+        return result;
+    }
 
 }
 
