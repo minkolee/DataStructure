@@ -21,7 +21,7 @@ class Solution {
             return result;
         }
 
-        Queue<Wrapper> priorityQueue = new LinkedList<>();
+        Stack<Wrapper> stack = new Stack<>();
 
         Queue<Wrapper> queue = new LinkedList<>();
 
@@ -30,13 +30,11 @@ class Solution {
         queue.add(new Wrapper(root, startLevel));
         while (!queue.isEmpty()) {
 
-            System.out.println("当前队列是:"+queue);
 
             Wrapper ejectedNode = queue.remove();
 
-            System.out.println("弹出的是="+ejectedNode);
 
-            priorityQueue.add(ejectedNode);
+            stack.push(ejectedNode);
 
             if (ejectedNode.node.left != null) {
                 queue.offer(new Wrapper(ejectedNode.node.left, ejectedNode.level + 1));
@@ -51,14 +49,10 @@ class Solution {
 
 
         //然后就是从队列中收集元素.
-        while (!priorityQueue.isEmpty()) {
-            System.out.println(priorityQueue.remove());
-
-        }
 
 
-        assert priorityQueue.peek() != null;
-        int lastLevel = priorityQueue.peek().level;
+
+        int lastLevel = stack.peek().level;
 
 
 
@@ -70,12 +64,12 @@ class Solution {
 
 
 
-            while (priorityQueue.peek().level == lastLevel) {
+            while (stack.peek().level == lastLevel) {
 
 //                System.out.println(priorityQueue.peek().level);
 
-                templist.add(priorityQueue.remove().node.val);
-                if (priorityQueue.peek() == null) {
+                templist.add(0,stack.pop().node.val);
+                if (stack.isEmpty()) {
                     break;
                 }
             }
@@ -83,12 +77,7 @@ class Solution {
             lastLevel--;
         }
 
-
-
-
-
         return result;
-
 
     }
 
