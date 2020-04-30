@@ -1,108 +1,63 @@
-
-import java.util.*;
-
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
-
 class Solution {
-    public List<List<Integer>> levelOrderBottom(TreeNode root) {
-        // 类似于图算法的广度优先搜搜, 但是每一层可以在顶点上进行标记.
-
-        List<List<Integer>> result = new ArrayList<>();
-
-        if (root == null) {
-            return result;
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1 == null && l2 == null) {
+            return null;
         }
 
-        Stack<Wrapper> stack = new Stack<>();
-
-        Queue<Wrapper> queue = new LinkedList<>();
-
-        int startLevel = 1;
-
-        queue.add(new Wrapper(root, startLevel));
-        while (!queue.isEmpty()) {
-
-
-            Wrapper ejectedNode = queue.remove();
-
-
-            stack.push(ejectedNode);
-
-            if (ejectedNode.node.left != null) {
-                queue.offer(new Wrapper(ejectedNode.node.left, ejectedNode.level + 1));
-            }
-
-            if (ejectedNode.node.right != null) {
-                queue.offer(new Wrapper(ejectedNode.node.right, ejectedNode.level + 1));
-            }
-
-
+        if (l1 == null) {
+            return l2;
         }
 
+        if (l2 == null) {
+            return l1;
+        }
 
-        //然后就是从队列中收集元素.
+        //两个都不为空
+        //开始遍历两个链表, 然后组合成新链表
 
+        //创建一个两个节点的新链表, 开始合并
+        ListNode listNode = new ListNode(l1.val + l2.val);
+        ListNode result = listNode;
 
+        while (l1.next != null && l2.next != null) {
+            listNode.next = new ListNode(l1.next.val + l2.next.val);
+            listNode = listNode.next;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
 
-        int lastLevel = stack.peek().level;
+        //循环结束的时候, 一定是某一个l1或者l2的next为空了, 把不为空的部分, 拼上去
 
+        if (l1.next == null) {
+            listNode.next = l2.next;
+        }
 
+        if (l2.next == null) {
+            listNode.next = l1.next;
+        }
 
-        while (lastLevel != 0) {
-            List<Integer> templist = new ArrayList<>();
+        //然后从result的头部开始整理链表
 
-//            System.out.println(lastLevel);
-//            System.out.println(priorityQueue);
+        ListNode start = result;
 
-
-
-            while (stack.peek().level == lastLevel) {
-
-//                System.out.println(priorityQueue.peek().level);
-
-                templist.add(0,stack.pop().node.val);
-                if (stack.isEmpty()) {
-                    break;
+        while (start != null) {
+            if (start.val >= 10) {
+                start.val = start.val - 10;
+                if (start.next == null) {
+                    start.next = new ListNode(1);
+                } else {
+                    start.next.val = start.next.val + 1;
                 }
             }
-            result.add(templist);
-            lastLevel--;
+            start = start.next;
         }
+
 
         return result;
-
     }
 
-    private class Wrapper implements Comparable<Wrapper> {
 
-        private TreeNode node;
-        private int level;
 
-        public Wrapper(TreeNode node, int level) {
-            this.node = node;
-            this.level = level;
-        }
 
-        @Override
-        public int compareTo(Wrapper wrapper) {
-            return this.level - wrapper.level;
-        }
-
-        @Override
-        public String toString() {
-            return "Wrapper{" +
-                    "node=" + node.val +
-                    ", level=" + level +
-                    '}';
-        }
-    }
 
 }
