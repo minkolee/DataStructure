@@ -9,6 +9,8 @@ public class Test {
 
     public static void main(String[] args) {
 
+        System.out.println(Long.toHexString(Double.doubleToLongBits(0.03)));
+        System.out.println(Long.toHexString(Double.doubleToLongBits(0.03000000000000025)));
 
     }
 }
