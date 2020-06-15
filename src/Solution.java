@@ -57,7 +57,21 @@ class Solution {
     }
 
 
+    public static void main(String[] args) throws InterruptedException {
 
+        Thread thread1 = new Thread(){
+            @Override
+            public void run() {
+                System.out.println("I am thread1");
+            }
+        };
+
+        thread1.start();
+
+        thread1.join();
+
+        System.out.println("This is main thread");
+    }
 
 
 }
