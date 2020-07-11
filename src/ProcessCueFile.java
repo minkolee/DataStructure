@@ -26,12 +26,6 @@ public class ProcessCueFile {
         System.out.println("已经将文件写入至: " + newFileName);
     }
 
-    public static void main(String[] args) throws IOException {
-        String path = "D:\\downloads\\music\\王菲";
-        ProcessCueFile processor = new ProcessCueFile();
-        processor.recursionProcessFiles(path,true);
-    }
-
     private void recursionProcessFiles(String path, boolean override) throws IOException {
         File currentPath = new File(path);
         //是文件就判断cue文件然后处理, 默认是覆盖
@@ -51,6 +45,12 @@ public class ProcessCueFile {
                 recursionProcessFiles(f.getAbsolutePath(), override);
             }
         }
+    }
+
+    public static void main(String[] args) throws IOException {
+        String path = "D:\\music";
+        ProcessCueFile processor = new ProcessCueFile();
+        processor.recursionProcessFiles(path,true);
     }
 
 }

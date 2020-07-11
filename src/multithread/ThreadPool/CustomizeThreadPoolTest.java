@@ -35,7 +35,7 @@ public class CustomizeThreadPoolTest {
         };
 
         for (int i = 0; i < 10; i++) {
-            pool.submit(new MyThread());
+            pool.execute(new MyThread());
         }
         pool.shutdown();
     }
