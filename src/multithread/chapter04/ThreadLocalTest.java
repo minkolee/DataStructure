@@ -39,9 +39,7 @@ public class ThreadLocalTest {
         for (int i = 0; i < 100; i++) {
             executorService.submit(new ParseDate(i));
         }
-
         executorService.shutdown();
-
     }
 
 }
