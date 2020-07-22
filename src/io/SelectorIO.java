@@ -1,7 +1,5 @@
 package io;
 
-import alog4e.chapter02.sort01.Selection;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -13,8 +11,6 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -23,23 +19,34 @@ public class SelectorIO {
     public static void main(String[] args) throws IOException {
 
         //新创建一个ServerSocketChannel, 也就是TCP服务端
-        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+        ServerSocketChannel serverSocketChannelAt8000 = ServerSocketChannel.open();
 
         //很重要, 将其设置为异步模式, 否则还是同步模式
-        serverSocketChannel.configureBlocking(false);
+        serverSocketChannelAt8000.configureBlocking(false);
 
-        //只有了TCP服务端Channel, 还需要从中获取其内部包装的ServerSocket对象
-        ServerSocket socket = serverSocketChannel.socket();
+        //只有了TCP服务端Channel, 还需要从中获取其内部包装的ServerSocket对象用来绑定端口
+        ServerSocket socket = serverSocketChannelAt8000.socket();
         InetSocketAddress address = new InetSocketAddress(8000);
         socket.bind(address);
 
+        //继续创建一个绑定7000, 6000端口的channel
+        ServerSocketChannel serverSocketChannelAt7000 = ServerSocketChannel.open();
+        serverSocketChannelAt7000.socket().bind(new InetSocketAddress(7000));
 
+        serverSocketChannelAt7000.configureBlocking(false);
+
+        ServerSocketChannel serverSocketChannelAt8888 = ServerSocketChannel.open();
+        serverSocketChannelAt8888.socket().bind(new InetSocketAddress(8888));
+
+        serverSocketChannelAt8888.configureBlocking(false);
         //创建一个selector用于监听
         Selector selector = Selector.open();
 
         //channel调用自己的register方法向selector中注册, 并得到一个SelectionKey对象, 当然此时这个Key没有什么用, 实际用的是每个连接进来的描述符对应的Key
-        SelectionKey key = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-
+        //将三个Channel都注册到selector中
+        SelectionKey key8000 = serverSocketChannelAt8000.register(selector, SelectionKey.OP_ACCEPT);
+        SelectionKey key7000 = serverSocketChannelAt7000.register(selector, SelectionKey.OP_ACCEPT);
+        SelectionKey key8888 = serverSocketChannelAt8888.register(selector, SelectionKey.OP_ACCEPT);
 
         //主循环
         while (true) {
@@ -56,39 +63,28 @@ public class SelectorIO {
 
             while (iterable.hasNext()) {
                 SelectionKey selectionKey = iterable.next();
+                //这里要注意, 处理完一个之后, 需要立刻将其从迭代中去除, 否则下一次还会继续监听到这个端口
                 iterable.remove();
                 if (selectionKey.isAcceptable()) {
-                    System.out.println("接受连接");
-                    ServerSocketChannel serverSocketChannel1 = (ServerSocketChannel) selectionKey.channel();
-                    SocketChannel socketChannel = serverSocketChannel1.accept();
+                    //从SelectionKey中获取channel对象, 因为知道类型, 所以强制转换, 然后可以从其中获取连接的信息
+                    ServerSocketChannel newChannel = (ServerSocketChannel) selectionKey.channel();
+                    System.out.println("接受连接来自: "+ newChannel.socket().getLocalPort());
+                    //从ServerSocketChannel中获取SocketChannel. 也就是TCP连接
+                    SocketChannel socketChannel = newChannel.accept();
 
+                    //将内容一次性读入到2048长度的字节中
                     ByteBuffer byteBufferIn = ByteBuffer.allocate(2048);
-                    System.out.println(socketChannel.read(byteBufferIn));
+                    socketChannel.read(byteBufferIn);
                     byteBufferIn.flip();
 
+                    //将其按照UTF-8进行解码然后放到CharBuffer中, 打印出来
                     Charset utf8 = Charset.forName("UTF-8");
-                    CharsetEncoder encoder = utf8.newEncoder();
                     CharsetDecoder decoder = utf8.newDecoder();
 
                     CharBuffer charBufferin = decoder.decode(byteBufferIn);
 
                     System.out.println(charBufferin.array());
 
-                    String s = "HTTP/1.1 200 OK\n" +
-                            "Server: nginx/1.14.2\n" +
-                            "Date: Wed, 22 Jul 2020 05:37:16 GMT\n" +
-                            "Content-Type: text/html; charset=UTF-8\n" +
-                            "Transfer-Encoding: chunked\n" +
-                            "Connection: keep-alive\n" +
-                            "X-Powered-By: PHP/7.2.15\n" +
-                            "Expires: Wed, 11 Jan 1984 05:00:00 GMT\n" +
-                            "Cache-Control: no-cache, must-revalidate, max-age=0\n" +
-                            "Link: <https://conyli.cc/wp-json/>; rel=\"https://api.w.org/\"\n" +
-                            "Content-Encoding: gzip";
-
-                    ByteBuffer byteBufferOut = ByteBuffer.wrap(s.getBytes(StandardCharsets.UTF_8));
-
-                    socketChannel.write(byteBufferOut);
                     socketChannel.close();
 
                 } else if (selectionKey.isValid() && selectionKey.isReadable()) {
