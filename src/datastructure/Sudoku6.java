@@ -246,7 +246,6 @@ public class Sudoku6 {
         sudoku6.showBoard();
 
         sudoku6.getResult();
-
     }
 
 }
