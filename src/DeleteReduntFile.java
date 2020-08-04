@@ -28,6 +28,7 @@ public class DeleteReduntFile {
         for (File file : files) {
             if (file.isFile()) {
                 if (file.getName().contains("(1)")) {
+                    System.out.println("正在删除: " + file.getName());
                     if (file.delete()) {
                         sum++;
                     }
@@ -44,7 +45,7 @@ public class DeleteReduntFile {
 
     public static void main(String[] args) {
 
-        DeleteReduntFile deleter = new DeleteReduntFile("D:\\Downloads\\[FreeCourseSite.com] Udemy - The Complete Node.js Developer Course (3rd Edition)");
+        DeleteReduntFile deleter = new DeleteReduntFile("D:\\Downloads\\[FreeCourseSite.com] Udemy - React - The Complete Guide (incl Hooks, React Router, Redux)");
 
         deleter.DeleteFiles();
 
